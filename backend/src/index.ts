@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import app from './app'
 
-function main() {
+function main () {
   try {
     app.listen(process.env.PORT, () => {
       console.log(`\n🚀 Server running on port ${process.env.PORT}\n`)

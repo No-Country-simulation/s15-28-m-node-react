@@ -9,7 +9,7 @@ app.disable('x-powered-by')
 
 // Routes
 
-//app.use('/api', exampleRoutes)
+// app.use('/api', exampleRoutes)
 app.get('/', (_, res) => {
   res.send('Hello World!')
 })
