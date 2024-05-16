@@ -1,0 +1,26 @@
+{
+    "sourceFile": ".vscode/workspaces.code-workspace",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1715869521528,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1715869527929,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n       \"name\": \"🧰 root\",\r\n       \"path\": \"..\"\r\n     },\r\n     {\r\n-      \"name\": \"💻 \",\r\n+      \"name\": \"💻 Fron\",\r\n       \"path\": \"../binnacle\"\r\n     },\r\n     {\r\n       \"name\": \"🎚️ server\",\r\n"
+                },
+                {
+                    "date": 1715869612642,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,9 +4,9 @@\n       \"name\": \"🧰 root\",\r\n       \"path\": \"..\"\r\n     },\r\n     {\r\n-      \"name\": \"💻 frontend\r\n+      \"name\": \"💻 frontend\"\r\n       \"path\": \"../binnacle\"\r\n     },\r\n     {\r\n       \"name\": \"🎚️ server\",\r\n"
+                }
+            ],
+            "date": 1715869521528,
+            "name": "Commit-0",
+            "content": "{\r\n  \"folders\": [\r\n    {\r\n      \"name\": \"🧰 root\",\r\n      \"path\": \"..\"\r\n    },\r\n    {\r\n      \"name\": \"💻 binnacle\",\r\n      \"path\": \"../binnacle\"\r\n    },\r\n    {\r\n      \"name\": \"🎚️ server\",\r\n      \"path\": \"../server\"\r\n    }\r\n  ],\r\n}\r\n"
+        }
+    ]
+}
