@@ -1,5 +1,7 @@
 import cors from 'cors'
 import express from 'express'
+import example from './routes/example.routes'
+
 const app = express()
 
 // Middlewares
@@ -9,8 +11,6 @@ app.disable('x-powered-by')
 
 // Routes
 
-// app.use('/api', exampleRoutes)
-app.get('/', (_, res) => {
-  res.send('Hello World!')
-})
+app.use('/api', example)
+
 export default app
