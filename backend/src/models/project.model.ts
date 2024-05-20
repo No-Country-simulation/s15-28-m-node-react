@@ -52,6 +52,13 @@ export const Project = sequelize.define(
         key: 'id',
       },
     },
+    user_id: {
+      type: UUID,
+      allowNull: false,
+    },
+    team_id: {
+      type: UUID,
+    },
   },
   {
     tableName: 'projects',
