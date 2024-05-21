@@ -1,4 +1,4 @@
-import 'dotenv/config'
-import { Sequelize } from 'sequelize'
+import { Sequelize } from "sequelize";
+import { DATABASE_URL } from "../utils/config";
 
-export const sequelize = new Sequelize(process.env.DATABASE_URL as string)
+export const sequelize = new Sequelize(DATABASE_URL as string);
