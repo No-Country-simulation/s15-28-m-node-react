@@ -80,6 +80,15 @@ const Register: React.FC = () => {
       // Submit the form or perform other actions
       console.log('Form submitted:', { firstName, lastName, email, password, role, birthDate, phone });
     }
+
+    setFirstName('');
+    setLastName('');
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setRole('');
+    setBirthDate('');
+    setPhone('');
   };
 
   const handleClickShowPassword = () => {
@@ -91,51 +100,51 @@ const Register: React.FC = () => {
   };
 
   return (
-    <Box 
-      display="flex" 
-      flexDirection="column" 
-      alignItems="center" 
-      justifyContent="center" 
-      minHeight="100vh" 
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
+      minHeight="100vh"
       bgcolor="#f5f5f5"
     >
       <Box textAlign="center" mb={3}>
-        <Typography 
-          variant="h5" 
-          component="h2" 
+        <Typography
+          variant="h5"
+          component="h2"
           mb={1}
         >
           Get started with TimeTracker
         </Typography>
-        <Typography 
+        <Typography
           variant="body1"
         >
           Create a free account to start tracking time and supercharge your productivity.
         </Typography>
       </Box>
-      
-      <Box 
-        p={4} 
-        bgcolor="white" 
-        borderRadius={2} 
-        boxShadow={3} 
+
+      <Box
+        p={4}
+        bgcolor="white"
+        borderRadius={2}
+        boxShadow={3}
         width={300}
       >
-        <Typography 
-          variant="h5" 
-          component="h2" 
-          textAlign="center" 
+        <Typography
+          variant="h5"
+          component="h2"
+          textAlign="center"
           mb={3}
         >
           Sign Up
         </Typography>
         <form onSubmit={handleSubmit}>
           <Box mb={2}>
-            <TextField 
-              fullWidth 
-              label="First Name" 
-              variant="outlined" 
-              size="small" 
+            <TextField
+              fullWidth
+              label="First Name"
+              variant="outlined"
+              size="small"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               error={!!errors.firstName}
@@ -143,11 +152,11 @@ const Register: React.FC = () => {
             />
           </Box>
           <Box mb={2}>
-            <TextField 
-              fullWidth 
-              label="Last Name" 
-              variant="outlined" 
-              size="small" 
+            <TextField
+              fullWidth
+              label="Last Name"
+              variant="outlined"
+              size="small"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               error={!!errors.lastName}
@@ -155,12 +164,12 @@ const Register: React.FC = () => {
             />
           </Box>
           <Box mb={2}>
-            <TextField 
-              fullWidth 
-              label="Email" 
-              type="email" 
-              variant="outlined" 
-              size="small" 
+            <TextField
+              fullWidth
+              label="Email"
+              type="email"
+              variant="outlined"
+              size="small"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={!!errors.email}
@@ -168,12 +177,12 @@ const Register: React.FC = () => {
             />
           </Box>
           <Box mb={2}>
-            <TextField 
-              fullWidth 
-              label="Password" 
-              type={showPassword ? 'text' : 'password'} 
-              variant="outlined" 
-              size="small" 
+            <TextField
+              fullWidth
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              variant="outlined"
+              size="small"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={!!errors.password}
@@ -194,12 +203,12 @@ const Register: React.FC = () => {
             />
           </Box>
           <Box mb={2}>
-            <TextField 
-              fullWidth 
-              label="Confirm Password" 
-              type={showConfirmPassword ? 'text' : 'password'} 
-              variant="outlined" 
-              size="small" 
+            <TextField
+              fullWidth
+              label="Confirm Password"
+              type={showConfirmPassword ? 'text' : 'password'}
+              variant="outlined"
+              size="small"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               error={!!errors.confirmPassword}
@@ -236,12 +245,12 @@ const Register: React.FC = () => {
             </FormControl>
           </Box>
           <Box mb={2}>
-            <TextField 
-              fullWidth 
-              label="Birth Date" 
-              type="date" 
-              variant="outlined" 
-              size="small" 
+            <TextField
+              fullWidth
+              label="Birth Date"
+              type="date"
+              variant="outlined"
+              size="small"
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
               error={!!errors.birthDate}
@@ -252,45 +261,45 @@ const Register: React.FC = () => {
             />
           </Box>
           <Box mb={2}>
-            <TextField 
-              fullWidth 
-              label="Phone" 
-              variant="outlined" 
-              size="small" 
+            <TextField
+              fullWidth
+              label="Phone"
+              variant="outlined"
+              size="small"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               error={!!errors.phone}
               helperText={errors.phone}
             />
           </Box>
-          <Button 
-            fullWidth 
-            type="submit" 
-            variant="contained" 
+          <Button
+            fullWidth
+            type="submit"
+            variant="contained"
             color="primary"
           >
             Sign Up
           </Button>
         </form>
-        <Divider 
-          sx={{ my: 3 }} 
+        <Divider
+          sx={{ my: 3 }}
         >
-          <Typography 
-            variant="body2" 
+          <Typography
+            variant="body2"
             color="textSecondary"
           >
             Or Continue With
           </Typography>
         </Divider>
         <Box display="flex" justifyContent="center" gap={2}>
-          <IconButton 
-            aria-label="google" 
+          <IconButton
+            aria-label="google"
             color="error"
           >
             <FaGoogle />
           </IconButton>
-          <IconButton 
-            aria-label="linkedin" 
+          <IconButton
+            aria-label="linkedin"
             color="primary"
           >
             <FaLinkedin />
@@ -299,16 +308,17 @@ const Register: React.FC = () => {
             <FaGithub />
           </IconButton>
         </Box>
-        <Typography 
-          variant="body2" 
-          color="textSecondary" 
+        <Typography
+          variant="body2"
+          color="textSecondary"
           textAlign="center"
           mt={3}
         >
           Already have an account? <a href="/login" style={{ color: '#1976d2' }}>Login</a>
         </Typography>
       </Box>
-      </Box>
-)};
+    </Box>
+  )
+};
 
 export default Register;
