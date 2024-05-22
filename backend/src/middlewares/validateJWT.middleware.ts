@@ -8,15 +8,13 @@ export const validateJWT = (
   next: NextFunction
 ) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) throw new Error("Check authorization");
-    const token = authHeader.split(" ")[1];
-    if (!token)
-      return res.status(401).json({ message: "Unauthorized access" });
+    const token = req.headers.authorization!.split(" ")[1];
     const userInfo = verify(token, Secret);
-    console.log("jwt ->", userInfo);
+    if (!userInfo) {
+      return res.status(401).json({ message: "El token no es válido." });
+    }
     next();
   } catch (error) {
-    return res.status(500).json({ message: "Validate JWT Internal server error." });
+    return res.status(500).json({ message: "La validación del token ha fallado." });
   }
 };

@@ -10,21 +10,26 @@ export async function createUser(req: Request, res: Response) {
         last_name,
         email,
         password,
-        role_id,
         birthdate,
+        role_id,
         phone,
     } = req.body;
-    // encripta el password
+    const validateEmail = await User.findOne({ where: { email } });
+    if (validateEmail != null) {
+      return res
+        .status(404)
+        .json({ message: "El email ya se encuentra registrado" });
+    }
     const hashedPassword = await hash(password, 10);
     // Crear el usuario.
     const newUser = await User.create({
       first_name,
       last_name,
-      email,
       password: hashedPassword,
-      role_id,
+      email,
       birthdate,
       phone,
+      role_id
     });
     return res.status(201).json(newUser);
   } catch (error) {
