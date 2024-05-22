@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize'
-import { sequelize } from '../database/database.js'
+import { sequelize } from '../database/database'
 
 const { UUID, UUIDV4, STRING, TEXT } = DataTypes
 
