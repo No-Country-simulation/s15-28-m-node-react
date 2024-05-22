@@ -12,9 +12,9 @@ import { validateJWT } from "../middlewares/validateJWT.middleware";
 const router = Router();
 
 router.get("/", isApiKey, getUsers);
-router.get("/:id", getUserById);
-router.post("/", createUser);
-router.put("/:id",isApiKey, validateJWT, updateUser);
-router.delete("/:id", deleteUser);
+router.get("/:id",isApiKey, getUserById);
+router.post("/", isApiKey, validateJWT, createUser);
+router.put("/:id", isApiKey, validateJWT, updateUser);
+router.delete("/:id", isApiKey, validateJWT, deleteUser);
 
 export { router };

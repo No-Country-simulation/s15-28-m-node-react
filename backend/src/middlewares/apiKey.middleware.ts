@@ -5,14 +5,11 @@ const authorizedHosts = ["localhost:3000", "localhost"];
 
 export const isApiKey = (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("req->", req.headers);
     const apiKey = req.headers.apikey;
-    console.log("apiKey->", apiKey);
     if (!apiKey || Key !== apiKey) {
       throw new Error("Api key not provided");
     }
     const host = req.headers.host;
-    console.log("host->", host);
     if (!host || !authorizedHosts.includes(host)) {
       throw new Error("Invalid host");
     }
