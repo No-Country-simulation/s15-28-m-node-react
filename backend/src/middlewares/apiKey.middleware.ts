@@ -14,6 +14,7 @@ export const isApiKey = (
       return res.status(404).json({ message: "El api key no es valido." });
     }
     const host = req.headers.host;
+    console.log(host);
     if (!host || !authorizedHosts.includes(host)) {
       return res.status(404).json({ message: "La dirección de la petición no esta autorizada." });
     }
