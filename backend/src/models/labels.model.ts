@@ -16,7 +16,7 @@ export const Label = sequelize.define(
       type: STRING(255),
       allowNull: false,
     },
-    isActive: {
+    isactive: {
       type: BOOLEAN,
       defaultValue: true,
     },
