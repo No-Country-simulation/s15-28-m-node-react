@@ -3,6 +3,7 @@ import { Box, Button, Divider, IconButton, TextField, Typography, InputAdornment
 import { FaGithub, FaGoogle, FaLinkedin } from 'react-icons/fa';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { validateName, validateEmail, validatePassword, validatePhone, validateBirthDate } from './validations';
 
 interface Errors {
   firstName: string;
@@ -28,32 +29,18 @@ const Register: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-  const validateEmail = (email: string): boolean => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-
-  const validatePassword = (password: string): boolean => {
-    return password.length >= 8 && /[a-zA-Z]/.test(password) && /[0-9]/.test(password);
-  };
-
-  const validatePhone = (phone: string): boolean => {
-    const regex = /^\+?[0-9]{7,15}$/;
-    return regex.test(phone);
-  };
-
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     let valid = true;
     const newErrors: Errors = { firstName: '', lastName: '', email: '', password: '', confirmPassword: '', role: '', birthDate: '', phone: '' };
 
-    if (!firstName) {
-      newErrors.firstName = 'Please enter your first name.';
+    if (!validateName(firstName)) {
+      newErrors.firstName = 'Please enter a valid first name.';
       valid = false;
     }
 
-    if (!lastName) {
-      newErrors.lastName = 'Please enter your last name.';
+    if (!validateName(lastName)) {
+      newErrors.lastName = 'Please enter a valid last name.';
       valid = false;
     }
 
@@ -63,7 +50,7 @@ const Register: React.FC = () => {
     }
 
     if (!validatePassword(password)) {
-      newErrors.password = 'Password must be at least 8 characters long and contain letters and numbers.';
+      newErrors.password = 'Password must be 8-30 characters long and include a number, a symbol, an uppercase and a lowercase letter.';
       valid = false;
     }
 
@@ -77,12 +64,12 @@ const Register: React.FC = () => {
       valid = false;
     }
 
-    if (!birthDate) {
-      newErrors.birthDate = 'Please enter your birth date.';
+    if (!birthDate || !validateBirthDate(birthDate)) {
+      newErrors.birthDate = 'Please enter a valid birth date.';
       valid = false;
     }
 
-    if (!validatePhone(phone)) {
+    if (phone && !validatePhone(phone)) {
       newErrors.phone = 'Please enter a valid phone number.';
       valid = false;
     }
@@ -242,15 +229,10 @@ const Register: React.FC = () => {
                 onChange={(e) => setRole(e.target.value as string)}
                 label="Role"
               >
-               
                 <MenuItem value="Freelancer">Freelancer</MenuItem>
                 <MenuItem value="Client">Client</MenuItem>
               </Select>
-              {errors.role && (
-                <Typography variant="body2" color="error">
-                  {errors.role}
-                </Typography>
-              )}
+              {errors.role && <Typography variant="body2" color="error">{errors.role}</Typography>}
             </FormControl>
           </Box>
           <Box mb={2}>
@@ -260,18 +242,19 @@ const Register: React.FC = () => {
               type="date" 
               variant="outlined" 
               size="small" 
-              InputLabelProps={{ shrink: true }}
               value={birthDate}
               onChange={(e) => setBirthDate(e.target.value)}
               error={!!errors.birthDate}
               helperText={errors.birthDate}
+              InputLabelProps={{
+                shrink: true
+              }}
             />
           </Box>
-          <Box mb={3}>
+          <Box mb={2}>
             <TextField 
               fullWidth 
               label="Phone" 
-              type="tel" 
               variant="outlined" 
               size="small" 
               value={phone}
@@ -281,12 +264,12 @@ const Register: React.FC = () => {
             />
           </Box>
           <Button 
-            type="submit" 
             fullWidth 
+            type="submit" 
             variant="contained" 
             color="primary"
           >
-            Register
+            Sign Up
           </Button>
         </form>
         <Divider 
@@ -325,8 +308,7 @@ const Register: React.FC = () => {
           Already have an account? <a href="/login" style={{ color: '#1976d2' }}>Login</a>
         </Typography>
       </Box>
-    </Box>
-  );
-};
+      </Box>
+)};
 
 export default Register;

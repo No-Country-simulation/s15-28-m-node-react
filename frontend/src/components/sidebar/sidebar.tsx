@@ -20,43 +20,43 @@ const Sidebar: React.FC = () => {
     >
       <Toolbar />
       <List>
-        <ListItem button>
+        <ListItem>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
           <ListItemText primary="Dashboard" />
         </ListItem>
-        <ListItem button>
+        <ListItem >
           <ListItemIcon>
             <AccessTimeIcon />
           </ListItemIcon>
           <ListItemText primary="Time Tracker" />
         </ListItem>
-        <ListItem button>
+        <ListItem >
           <ListItemIcon>
             <HistoryIcon />
           </ListItemIcon>
           <ListItemText primary="History" />
         </ListItem>
-        <ListItem button>
+        <ListItem >
           <ListItemIcon>
             <BarChartIcon />
           </ListItemIcon>
           <ListItemText primary="Report" />
         </ListItem>
-        <ListItem button>
+        <ListItem >
           <ListItemIcon>
             <AssignmentIcon />
           </ListItemIcon>
           <ListItemText primary="Projects" />
         </ListItem>
-        <ListItem button>
+        <ListItem >
           <ListItemIcon>
             <GroupIcon />
           </ListItemIcon>
           <ListItemText primary="Teams" />
         </ListItem>
-        <ListItem button>
+        <ListItem>
           <ListItemIcon>
             <BusinessIcon />
           </ListItemIcon>
