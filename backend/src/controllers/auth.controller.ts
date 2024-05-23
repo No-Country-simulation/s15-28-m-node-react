@@ -64,7 +64,6 @@ export async function login(req: Request, res: Response) {
   try {
     const body = req.body;
     const validateBodyInModel = validateFields(body);
-    console.log("validate ->", validateBodyInModel);
     if (validateBodyInModel !== true)
       return res.status(400).json(validateBodyInModel);
     const validateRequeridBody = validateRequeridFields(body);

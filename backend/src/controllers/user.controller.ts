@@ -46,7 +46,6 @@ export async function createUser(req: Request, res: Response) {
         .status(400)
         .json({ message: "El email ya se encuentra registrado." });
     }
-    console.log('e->',validateEmail);
     const hashedPassword = await hash(body.password, 10);
     body.password = hashedPassword;
     const newUser = await User.create(body);
