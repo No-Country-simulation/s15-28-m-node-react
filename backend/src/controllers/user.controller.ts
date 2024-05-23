@@ -39,6 +39,10 @@ export async function createUser(req: Request, res: Response) {
     if (validateBodyInModel !== true) return res.status(400).json(validateBodyInModel);
     const validateRequeridBody = validateRequeridFields(body);
     if (validateRequeridBody !== true) return res.status(400).json(validateRequeridBody);
+    const validateEmail = await User.findOne({ where: { email: body.email } });
+    if (validateEmail != null) {
+      return { message: "El correo electrónico ya se encuentra registrado." };
+    }
     const hashedPassword = await hash(body.password, 10);
     body.password = hashedPassword;
     // Crear el usuario.
@@ -86,6 +90,10 @@ export async function updateUser(req: Request, res: Response) {
     const body = req.body;
     const validate = validateFields(body);
     if (validate !== true) return res.status(400).json(validate);
+    const validateEmail = await User.findOne({ where: { email } });
+  if (validateEmail != null) {
+    return { message: "El correo electrónico ya se encuentra registrado." };
+  }
     const [updated] = await User.update(body, {
       where: { uuid: id },
     });
