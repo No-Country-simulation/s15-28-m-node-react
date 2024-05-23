@@ -41,7 +41,6 @@ export async function createUser(req: Request, res: Response) {
     if (validateRequeridBody !== true) return res.status(400).json(validateRequeridBody);
     const hashedPassword = await hash(body.password, 10);
     body.password = hashedPassword;
-    console.log("body ->", body);
     // Crear el usuario.
     const newUser = await User.create(body);
     return res.status(201).json({ message: "El usuario ha sido creado con éxito.", data: newUser });
