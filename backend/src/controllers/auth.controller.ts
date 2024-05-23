@@ -87,7 +87,7 @@ export async function login(req: Request, res: Response) {
     // responde
     return res
       .status(200)
-      .json({ message: "El inicio de sesión éxito.", token });
+      .json({ message: "El inicio de sesión ha sido exitoso.", token });
   } catch (error) {
     return res.status(500).json({
       message: "El inicio de sesión tiene un error interno del Servidor,",

@@ -26,7 +26,7 @@ const validateRequeridFields = (body: any) => {
   );
   for (const field of requiredFields) {
     if (!body[field]) {
-      return { message: `El campo ${field} es obligatorio.` };
+      return { message: `El campo ${field} es requerido.` };
     }
   }
   return true;
@@ -44,7 +44,7 @@ export async function createUser(req: Request, res: Response) {
     console.log("body ->", body);
     // Crear el usuario.
     const newUser = await User.create(body);
-    return res.status(201).json(newUser);
+    return res.status(201).json({ message: "El usuario ha sido creado con éxito.", data: newUser });
   } catch (error) {
     return res
       .status(500)
@@ -55,7 +55,7 @@ export async function createUser(req: Request, res: Response) {
 export async function getUsers(_req: Request, res: Response) {
   try {
     const findUsers = await User.findAll();
-    return res.status(200).json(findUsers);
+    return res.status(200).json({ message: "Lista de usuarios realizada con éxito.", data:findUsers });
   } catch (error) {
     return res.status(500).json({
       message: "Listado de los usuarios tiene un error interno del Servidor",
@@ -71,7 +71,7 @@ export async function getUserById(req: Request, res: Response) {
     if (findUserById == null) {
       return res.status(404).json({ message: "Usuario no encontrado." });
     }
-    return res.status(200).json(findUserById);
+    return res.status(200).json({ message: "El usuario ha sido encontrado con éxito.", data:findUserById });
   } catch (error) {
     return res.status(500).json({
       message:
@@ -97,7 +97,7 @@ export async function updateUser(req: Request, res: Response) {
           .status(404)
           .json({ message: "Usuario no se pudo actualizar." });
       }
-      return res.status(200).json(updatedUser);
+      return res.status(200).json({ message: "El usuario ha sido actualizado con éxito.", data: updatedUser });
     }
     return res.status(404).json({ message: "Usuario no encontrado." });
   } catch (error) {
@@ -113,11 +113,10 @@ export async function deleteUser(req: Request, res: Response) {
     const id = req.params.id;
     if (!id) return res.status(400).json({ message: "El id es requerido." });
     const deletedUser = await User.destroy({ where: { uuid: id } });
-    console.log("deletedUser->", deletedUser);
     if (deletedUser === 1) {
-      return res.status(200).json({ message: "El usuario ha sido eliminado." });
+      return res.status(200).json({ message: "El usuario ha sido eliminado con éxito." });
     }
-    return res.status(404).json({ message: "El usuario no se pudo eliminar." });
+    return res.status(404).json({ message: "El usuario no ha sido encontrado." });
   } catch (error) {
     return res.status(500).json({
       message:
