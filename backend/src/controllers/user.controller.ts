@@ -2,6 +2,7 @@ import { hash } from "bcrypt";
 import { Request, Response } from "express";
 import { User } from "../models/users.model";
 
+
 const userKeys = Object.keys(User.getAttributes());
 
 const validateFields = (body: any) => {
@@ -48,6 +49,23 @@ export async function createUser(req: Request, res: Response) {
     // Crear el usuario.
     const newUser = await User.create(body);
     return res.status(201).json({ message: "El usuario ha sido creado con éxito.", data: newUser });
+
+export async function createUser(req: Request, res: Response) {
+  try {
+    const { first_name, last_name, birthdate, phone, email, password, role_id, } = req.body;
+    // Crear el usuario.
+    const passwordEncrypt = await hash(password, 10);
+    const newUser = await User.create({
+      first_name,
+      last_name,
+      password: passwordEncrypt,
+      email,
+      birthdate,
+      phone,
+      role_id,
+    });
+    return res.status(201).json(newUser);
+
   } catch (error) {
     return res
       .status(500)
