@@ -24,11 +24,11 @@ export const Task = sequelize.define(
       type: STRING(255),
       allowNull: false,
     },
-    isCompleted: {
+    iscompleted: {
       type: BOOLEAN,
       defaultValue: false,
     },
-    isActive: {
+    isactive: {
       type: BOOLEAN,
       defaultValue: true,
     },
