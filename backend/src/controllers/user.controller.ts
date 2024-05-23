@@ -2,38 +2,25 @@ import { hash } from "bcrypt";
 import { Request, Response } from "express";
 import { User } from "../models/users.model";
 
-
 export async function createUser(req: Request, res: Response) {
   try {
-    const {
-        first_name,
-        last_name,
-        email,
-        password,
-        birthdate,
-        role_id,
-        phone,
-    } = req.body;
-    const validateEmail = await User.findOne({ where: { email } });
-    if (validateEmail != null) {
-      return res
-        .status(404)
-        .json({ message: "El email ya se encuentra registrado" });
-    }
-    const hashedPassword = await hash(password, 10);
+    const { first_name, last_name, birthdate, phone, email, password, role_id, } = req.body;
     // Crear el usuario.
+    const passwordEncrypt = await hash(password, 10);
     const newUser = await User.create({
       first_name,
       last_name,
-      password: hashedPassword,
+      password: passwordEncrypt,
       email,
       birthdate,
       phone,
-      role_id
+      role_id,
     });
     return res.status(201).json(newUser);
   } catch (error) {
-    return res.status(500).json({ message: "Crear Usuario tiene un error interno del Servidor" });
+    return res
+      .status(500)
+      .json({ message: "Crear Usuario tiene un error interno del Servidor" });
   }
 }
 
@@ -42,7 +29,9 @@ export async function getUsers(_req: Request, res: Response) {
     const findUsers = await User.findAll();
     return res.status(200).json(findUsers);
   } catch (error) {
-    return res.status(500).json({ message: "Listado de los usuarios tiene un error interno del Servidor" });
+    return res.status(500).json({
+      message: "Listado de los usuarios tiene un error interno del Servidor",
+    });
   }
 }
 
@@ -55,7 +44,10 @@ export async function getUserById(req: Request, res: Response) {
     }
     return res.status(200).json(findUserById);
   } catch (error) {
-    return res.status(500).json({ message: "La búsqueda de usuario por id tiene un error interno del Servidor." });
+    return res.status(500).json({
+      message:
+        "La búsqueda de usuario por id tiene un error interno del Servidor.",
+    });
   }
 }
 
@@ -69,13 +61,18 @@ export async function updateUser(req: Request, res: Response) {
     if (updated) {
       const updatedUser = await User.findByPk(id);
       if (updatedUser == null) {
-        return res.status(404).json({ message: "Usuario no se pudo actualizar." });
+        return res
+          .status(404)
+          .json({ message: "Usuario no se pudo actualizar." });
       }
       return res.status(200).json(updatedUser);
     }
     return res.status(404).json({ message: "Usuario no encontrado." });
   } catch (error) {
-    return res.status(500).json({ message: "La actualización del usuario tiene un error interno del Servidor." });
+    return res.status(500).json({
+      message:
+        "La actualización del usuario tiene un error interno del Servidor.",
+    });
   }
 }
 
@@ -89,6 +86,9 @@ export async function deleteUser(req: Request, res: Response) {
     }
     return res.status(404).json({ message: "El usuario no se pudo eliminar." });
   } catch (error) {
-    return res.status(500).json({ message: "La eliminación del usuario tiene un error interno del Servidor." });
+    return res.status(500).json({
+      message:
+        "La eliminación del usuario tiene un error interno del Servidor.",
+    });
   }
 }
