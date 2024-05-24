@@ -1,7 +1,11 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/database'
+import { Status } from './status.model'
+import { Label } from './labels.model'
+import { CustomLabel } from './customLabels.model'
+import { Project } from './project.model'
 
-const { UUID, UUIDV4, STRING, DATEONLY, TIME, BOOLEAN } = DataTypes
+const { UUID, UUIDV4 } = DataTypes
 
 export const Task = sequelize.define(
   'tasks',
@@ -11,26 +15,51 @@ export const Task = sequelize.define(
       primaryKey: true,
       defaultValue: UUIDV4,
     },
-    start_date: {
-      type: DATEONLY,
+    init_date: {
+      type: DataTypes.DATE,
     },
     end_date: {
-      type: DATEONLY,
-    },
-    duration: {
-      type: TIME,
+      type: DataTypes.DATE,
     },
     name: {
-      type: STRING(255),
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    isCompleted: {
-      type: BOOLEAN,
-      defaultValue: false,
+    is_completed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
-    isActive: {
-      type: BOOLEAN,
-      defaultValue: true,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    status_uuid: {
+      type: UUID,
+      references: {
+        model: Status,
+        key: 'uuid',
+      },
+    },
+    custom_label_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: CustomLabel,
+        key: 'id',
+      },
+    },
+    label_id: {
+      type: UUID,
+      references: {
+        model: Label,
+        key: 'uuid',
+      },
+    },
+    project_uuid: {
+      type: UUID,
+      references: {
+        model: Project,
+        key: 'uuid',
+      },
     },
   },
   {

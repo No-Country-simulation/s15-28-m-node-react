@@ -15,15 +15,18 @@ export const Invoice = sequelize.define(
     total_time: {
       type: TIME,
     },
-    hourly_rate: {
+    price_hour: {
       type: DECIMAL(10, 2),
     },
-    project_uuid: {
+    project_id: {
       type: UUID,
       references: {
         model: Project,
-        key: 'UUID',
+        key: 'uuid',
       },
+    },
+    issue_date: {
+      type: DataTypes.DATE,
     },
   },
   {
@@ -31,5 +34,3 @@ export const Invoice = sequelize.define(
     timestamps: false,
   }
 )
-
-Invoice.belongsTo(Project, { foreignKey: 'project_uuid' })

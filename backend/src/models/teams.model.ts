@@ -1,7 +1,5 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/database'
-import { User } from './users.model'
-import { TeamInfo } from './teamInfo.model'
 
 const { UUID, UUIDV4 } = DataTypes
 
@@ -13,21 +11,12 @@ export const Team = sequelize.define(
       primaryKey: true,
       defaultValue: UUIDV4,
     },
-    user_uuid: {
-      type: UUID,
-      references: {
-        model: User,
-        key: 'UUID',
-      },
-      onDelete: 'CASCADE',
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    team_uuid: {
-      type: UUID,
-      references: {
-        model: TeamInfo,
-        key: 'UUID',
-      },
-      onDelete: 'CASCADE',
+    description: {
+      type: DataTypes.TEXT,
     },
   },
   {
@@ -35,6 +24,3 @@ export const Team = sequelize.define(
     timestamps: false,
   }
 )
-
-Team.belongsTo(User, { foreignKey: 'user_uuid' })
-Team.belongsTo(TeamInfo, { foreignKey: 'team_uuid' })

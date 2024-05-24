@@ -2,37 +2,35 @@ import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/database'
 import { Task } from './tasks.model'
 
-const { UUID, UUIDV4, TIME } = DataTypes
+const { UUID, UUIDV4 } = DataTypes
 
-export const Timer = sequelize.define(
-  'timers',
+export const Stopwatch = sequelize.define(
+  'stopwatches',
   {
     uuid: {
       type: UUID,
       primaryKey: true,
       defaultValue: UUIDV4,
     },
-    start_time: {
+    init_date: {
       type: DataTypes.DATE,
     },
-    end_time: {
+    end_date: {
       type: DataTypes.DATE,
     },
-    total_time: {
-      type: TIME,
+    total_date: {
+      type: DataTypes.TIME,
     },
-    task_uuid: {
+    task_id: {
       type: UUID,
       references: {
         model: Task,
-        key: 'UUID',
+        key: 'uuid',
       },
     },
   },
   {
-    tableName: 'timers',
+    tableName: 'stopwatches',
     timestamps: false,
   }
 )
-
-Timer.belongsTo(Task, { foreignKey: 'task_uuid' })

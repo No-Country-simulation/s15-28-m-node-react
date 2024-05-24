@@ -1,15 +1,16 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/database'
 
-const { UUID, UUIDV4 } = DataTypes
-
-export const Status = sequelize.define(
-  'status',
+export const CustomLabel = sequelize.define(
+  'custom_labels',
   {
-    uuid: {
-      type: UUID,
+    id: {
+      type: DataTypes.INTEGER,
       primaryKey: true,
-      defaultValue: UUIDV4,
+      autoIncrement: true,
+    },
+    description: {
+      type: DataTypes.TEXT,
     },
     color: {
       type: DataTypes.STRING,
@@ -20,7 +21,7 @@ export const Status = sequelize.define(
     },
   },
   {
-    tableName: 'status',
+    tableName: 'custom_labels',
     timestamps: false,
   }
 )
