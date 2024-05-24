@@ -10,19 +10,19 @@ export const UserTeam = sequelize.define(
   {
     user_uuid: {
       type: UUID,
+      allowNull: false,
       references: {
         model: User,
         key: 'uuid',
       },
-      primaryKey: true,
     },
     team_uuid: {
       type: UUID,
+      allowNull: false,
       references: {
         model: Team,
         key: 'uuid',
       },
-      primaryKey: true,
     },
   },
   {
