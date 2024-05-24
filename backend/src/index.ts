@@ -1,10 +1,13 @@
-import 'dotenv/config'
 import app from './app'
+import { sequelize } from './database/database'
+import { PORT } from './utils/config'
 
-function main () {
+async function main  () {
   try {
-    app.listen(process.env.PORT, () => {
-      console.log(`\n🚀 Server running on port ${process.env.PORT}\n`)
+    await sequelize.authenticate()
+    console.log('Successful connection to the database')
+    app.listen(PORT, () => {
+      console.log(`\n🚀 Server running on port ${PORT}\n`)
     })
   } catch (error) {
     console.log(`Unable to connect to the database: ${error}`)

@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/database'
 import { Role } from './roles.model'
 
-const { UUID, UUIDV4, STRING, TEXT, DATEONLY, INTEGER } = DataTypes
+const { UUID, UUIDV4 } = DataTypes
 
 export const User = sequelize.define(
   'users',
@@ -12,33 +12,34 @@ export const User = sequelize.define(
       primaryKey: true,
       defaultValue: UUIDV4,
     },
-    thumbnail: {
-      type: TEXT,
+    avatar: {
+      type: DataTypes.TEXT,
     },
     first_name: {
-      type: STRING(255),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     last_name: {
-      type: STRING(255),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     password: {
-      type: STRING(255),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
-      type: STRING(255),
+      type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
     },
-    birthdate: {
-      type: DATEONLY,
-    },
     phone: {
-      type: STRING(50),
+      type: DataTypes.STRING,
+    },
+    birthdate: {
+      type: DataTypes.DATE,
     },
     role_id: {
-      type: INTEGER,
+      type: DataTypes.INTEGER,
       references: {
         model: Role,
         key: 'id',
@@ -50,5 +51,3 @@ export const User = sequelize.define(
     timestamps: false,
   }
 )
-
-User.belongsTo(Role, { foreignKey: 'role_id' })

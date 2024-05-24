@@ -1,24 +1,29 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/database'
 
-const { STRING, TEXT, BOOLEAN } = DataTypes
+const { UUID, UUIDV4 } = DataTypes
 
 export const Label = sequelize.define(
   'labels',
   {
+    uuid: {
+      type: UUID,
+      primaryKey: true,
+      defaultValue: UUIDV4,
+    },
     description: {
-      type: TEXT,
+      type: DataTypes.TEXT,
     },
     color: {
-      type: STRING(50),
+      type: DataTypes.STRING,
     },
     name: {
-      type: STRING(255),
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    isActive: {
-      type: BOOLEAN,
-      defaultValue: true,
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
   },
   {

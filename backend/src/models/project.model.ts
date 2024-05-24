@@ -1,10 +1,10 @@
 import { DataTypes } from 'sequelize'
 import { sequelize } from '../database/database'
-import { User } from './users.model'
 import { Status } from './status.model'
+import { User } from './users.model'
+import { CustomLabel } from './customLabels.model'
 
-const { UUID, UUIDV4, STRING, DATEONLY, DECIMAL, TEXT, BOOLEAN, INTEGER } =
-  DataTypes
+const { UUID, UUIDV4, DECIMAL } = DataTypes
 
 export const Project = sequelize.define(
   'projects',
@@ -14,50 +14,56 @@ export const Project = sequelize.define(
       primaryKey: true,
       defaultValue: UUIDV4,
     },
-    start_date: {
-      type: DATEONLY,
+    init_date: {
+      type: DataTypes.DATE,
     },
     end_date: {
-      type: DATEONLY,
+      type: DataTypes.DATE,
     },
     name: {
-      type: STRING(255),
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    hourly_rate: {
+    price_hour: {
       type: DECIMAL(10, 2),
     },
     description: {
-      type: TEXT,
+      type: DataTypes.TEXT,
     },
-    client_id: {
+    id_cliente: {
+      type: DataTypes.INTEGER,
+    },
+    email_client: {
+      type: DataTypes.STRING,
+    },
+    is_completed: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    status_uuid: {
       type: UUID,
       references: {
-        model: User,
-        key: 'UUID',
+        model: Status,
+        key: 'uuid',
       },
     },
-    isCompleted: {
-      type: BOOLEAN,
-      defaultValue: false,
-    },
-    isActive: {
-      type: BOOLEAN,
-      defaultValue: true,
-    },
-    status_id: {
-      type: INTEGER,
+    custom_label_id: {
+      type: DataTypes.INTEGER,
       references: {
-        model: Status,
+        model: CustomLabel,
         key: 'id',
       },
     },
-    user_id: {
+    user_uuid: {
       type: UUID,
-      allowNull: false,
-    },
-    team_id: {
-      type: UUID,
+      references: {
+        model: User,
+        key: 'uuid',
+      },
     },
   },
   {
@@ -65,6 +71,3 @@ export const Project = sequelize.define(
     timestamps: false,
   }
 )
-
-Project.belongsTo(Status, { foreignKey: 'status_id' })
-Project.belongsTo(User, { foreignKey: 'client_id' })
