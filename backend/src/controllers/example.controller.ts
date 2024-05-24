@@ -1,5 +1,5 @@
 import { Role } from '../models/roles.model'
-import { Request, Response } from '../types.d'
+import { Request, Response } from '../utils/types'
 
 export async function createRoles(req: Request, res: Response) {
   try {
