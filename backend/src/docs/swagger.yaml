@@ -30,6 +30,117 @@ components:
       in: header
       name: apikey
 
+  schemas:
+    User:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: 12345678-1234-1234-1234-111111111111
+        first_name:
+          type: string
+          example: John
+        last_name:
+          type: string
+          example: Smith
+        email:
+          type: string
+          example: johndoe@example.com
+        avatar:
+          type: string
+          example: https://example.com/avatar.jpg
+        phone:
+          type: string
+          example: +1 123-456-7890
+        birthdate:
+          type: string
+          example: 05/22/1999
+        role_id:
+          type: number
+          example: 1
+    UserInput:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: User's first name
+          example: John
+        last_name:
+          type: string
+          description: User's last name
+          example: Smith
+        email:
+          type: string
+          description: User's email address
+          example: user@example.com
+        password:
+          type: string
+          description: User's password
+          example: yourPassword123
+        phone:
+          type: string
+          description: User's phone number
+          example: +1 123-456-7890
+        birthdate:
+          type: string
+          description: User's birthdate
+          example: 05/22/1999
+        role_id:
+          type: number
+          description: User's role ID (1 or 2) (1 = freelancer, 2 = client)
+          example: 1
+
+  parameters:
+    UserId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        example: 12345678-1234-1234-1234-111111111111
+
+  responses:
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Invalid request parameters
+    401:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: El email no está asociado a ningún usuario. O La contraseña es incorrecta.
+    404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Usuario no encontrado.
+    500:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Error interno del servidor.
+
 security:
   - ApiKeyAuth: []
 
@@ -70,35 +181,12 @@ paths:
                     description: JWT token for authenticated requests
                     example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
         '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Invalid request parameters
+          $ref: '#/components/responses/400'
         '401':
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: El email no está asociado a ningún usuario. O La contraseña es incorrecta.
+          $ref: '#/components/responses/401'
         '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: El inicio de sesión tiene un error interno del Servidor.
+          $ref: '#/components/responses/500'
+
   /auth/register:
     post:
       summary: Register a new user
@@ -109,36 +197,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                first_name:
-                  type: string
-                  description: User's first name
-                  example: John
-                last_name:
-                  type: string
-                  description: User's last name
-                  example: Smith
-                email:
-                  type: string
-                  description: User's email address
-                  example: user@example.com
-                password:
-                  type: string
-                  description: User's password
-                  example: yourPassword123
-                phone:
-                  type: string
-                  description: User's phone number
-                  example: +1 123-456-7890
-                birthdate:
-                  type: string
-                  description: User's birthdate
-                  example: 05/22/1999
-                role_id:
-                  type: number
-                  description: User's role ID (1 or 2) (1 = freelancer, 2 = client)
-                  example: 1
+              $ref: '#/components/schemas/UserInput'
       responses:
         '201':
           description: User successfully registered
@@ -150,30 +209,13 @@ paths:
                   message:
                     type: string
                     example: User registered successfully.
-                  userId:
-                    type: string
-                    description: The ID of the newly registered user
-                    example: 12345
+                  data:
+                    $ref: '#/components/schemas/User'
         '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Invalid request parameters
+          $ref: '#/components/responses/400'
         '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: El registro de usuario tiene un error interno del Servidor.
+          $ref: '#/components/responses/500'
+
   /user:
     get:
       summary: Get all users
@@ -195,42 +237,10 @@ paths:
                   data:
                     type: array
                     items:
-                      type: object
-                      properties:
-                        uuid:
-                          type: string
-                          example: 12345678-1234-1234-1234-111111111111
-                        first_name:
-                          type: string
-                          example: John
-                        last_name:
-                          type: string
-                          example: Smith
-                        email:
-                          type: string
-                          example: johndoe@example.com
-                        avatar:
-                          type: string
-                          example: https://example.com/avatar.jpg
-                        phone:
-                          type: string
-                          example: +1 123-456-7890
-                        birthdate:
-                          type: string
-                          example: 05/22/1999
-                        role_id:
-                          type: number
-                          example: 1
+                      $ref: '#/components/schemas/User'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Listado de los usuarios tiene un error interno del Servidor
+          $ref: '#/components/responses/500'
+
   /user/{id}:
     get:
       summary: Get a user by ID
@@ -239,64 +249,19 @@ paths:
       security:
         - ApiKeyAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 12345678-1234-1234-1234-111111111111
+        - $ref: '#/components/parameters/UserId'
       responses:
         '200':
           description: User retrieved successfully
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  uuid:
-                    type: string
-                    example: 12345678-1234-1234-1234-111111111111
-                  first_name:
-                    type: string
-                    example: John
-                  last_name:
-                    type: string
-                    example: Smith
-                  email:
-                    type: string
-                    example: johndoe@example.com
-                  avatar:
-                    type: string
-                    example: https://example.com/avatar.jpg
-                  phone:
-                    type: string
-                    example: +1 123-456-7890
-                  birthdate:
-                    type: string
-                    example: 05/22/1999
-                  role_id:
-                    type: number
-                    example: 1
+                $ref: '#/components/schemas/User'
         '404':
-          description: User not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Usuario no encontrado.
+          $ref: '#/components/responses/404'
         '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Error interno del servidor.
+          $ref: '#/components/responses/500'
+
     put:
       summary: Update a user
       tags:
@@ -304,45 +269,14 @@ paths:
       security:
         - ApiKeyAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 12345678-1234-1234-1234-111111111111
+        - $ref: '#/components/parameters/UserId'
       requestBody:
         description: User update data
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                first_name:
-                  type: string
-                  description: User's first name
-                  example: John
-                last_name:
-                  type: string
-                  description: User's last name
-                  example: Smith
-                email:
-                  type: string
-                  description: User's email address
-                  example: user@example.com
-                phone:
-                  type: string
-                  description: User's phone number
-                  example: +1 123-456-7890
-                birthdate:
-                  type: string
-                  description: User's birthdate
-                  example: 05/22/1999
-                role_id:
-                  type: number
-                  description: User's role ID (1 or 2) (1 = freelancer, 2 = client)
-                  example: 1
-              required: false
+              $ref: '#/components/schemas/UserInput'
       responses:
         '200':
           description: User successfully updated
@@ -354,40 +288,15 @@ paths:
                   message:
                     type: string
                     example: User updated successfully.
-                  userId:
-                    type: string
-                    description: The ID of the updated user
-                    example: 12345
+                  data:
+                    $ref: '#/components/schemas/User'
         '400':
-          description: Usuario no encontrado.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Usuario no encontrado.
+          $ref: '#/components/responses/400'
         '404':
-          description: Usuario no se pudo actualizar.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Usuario no se pudo actualizar.
+          $ref: '#/components/responses/404'
         '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Error interno del servidor.
+          $ref: '#/components/responses/500'
+
     delete:
       summary: Delete a user
       tags:
@@ -395,12 +304,7 @@ paths:
       security:
         - ApiKeyAuth: []
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            example: 12345678-1234-1234-1234-111111111111
+        - $ref: '#/components/parameters/UserId'
       responses:
         '200':
           description: El usuario ha sido eliminado con éxito.
@@ -413,22 +317,6 @@ paths:
                     type: string
                     example: El usuario ha sido eliminado con exito.
         '404':
-          description: El usuario no ha sido encontrado.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: El usuario no ha sido encontrado.
+          $ref: '#/components/responses/404'
         '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: La eliminación del usuario tiene un error interno del Servidor.
+          $ref: '#/components/responses/500'
