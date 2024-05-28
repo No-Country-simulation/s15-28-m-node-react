@@ -49,6 +49,9 @@ importers:
       swagger-ui-express:
         specifier: 5.0.0
         version: 5.0.0(express@4.19.2)
+      yaml:
+        specifier: ^2.4.2
+        version: 2.4.2
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -158,7 +161,7 @@ importers:
         version: 0.4.7(eslint@8.57.0)
       tailwindcss:
         specifier: ^3.4.3
-        version: 3.4.3(ts-node@10.9.2(@swc/core@1.5.6)(@types/node@20.12.12)(typescript@5.4.5))
+        version: 3.4.3(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.4.5))
       typescript:
         specifier: ^5.2.2
         version: 5.4.5
@@ -5614,13 +5617,13 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.38
 
-  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.5.6)(@types/node@20.12.12)(typescript@5.4.5)):
+  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.4.5)):
     dependencies:
       lilconfig: 3.1.1
       yaml: 2.4.2
     optionalDependencies:
       postcss: 8.4.38
-      ts-node: 10.9.2(@swc/core@1.5.6)(@types/node@20.12.12)(typescript@5.4.5)
+      ts-node: 10.9.2(@types/node@20.12.12)(typescript@5.4.5)
 
   postcss-nested@6.0.1(postcss@8.4.38):
     dependencies:
@@ -6061,7 +6064,7 @@ snapshots:
       express: 4.19.2
       swagger-ui-dist: 5.17.12
 
-  tailwindcss@3.4.3(ts-node@10.9.2(@swc/core@1.5.6)(@types/node@20.12.12)(typescript@5.4.5)):
+  tailwindcss@3.4.3(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.4.5)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -6080,7 +6083,7 @@ snapshots:
       postcss: 8.4.38
       postcss-import: 15.1.0(postcss@8.4.38)
       postcss-js: 4.0.1(postcss@8.4.38)
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.5.6)(@types/node@20.12.12)(typescript@5.4.5))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.12.12)(typescript@5.4.5))
       postcss-nested: 6.0.1(postcss@8.4.38)
       postcss-selector-parser: 6.1.0
       resolve: 1.22.8
@@ -6151,7 +6154,7 @@ snapshots:
     optionalDependencies:
       '@swc/core': 1.5.6
 
-  ts-node@10.9.2(@swc/core@1.5.6)(@types/node@20.12.12)(typescript@5.4.5):
+  ts-node@10.9.2(@types/node@20.12.12)(typescript@5.4.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -6168,8 +6171,6 @@ snapshots:
       typescript: 5.4.5
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.5.6
     optional: true
 
   ts-standard@12.0.2(typescript@5.1.6):
