@@ -14,8 +14,8 @@ app.use(morgan('dev'))
 app.disable('x-powered-by')
 
 // Routes
-
-app.use(excludeRoutes(['/api/v1/docs', '/api/docs'], isApiKey))
+const routesWithoutApiKey = ['/api/v1/docs', '/api/docs']
+app.use(excludeRoutes(routesWithoutApiKey, isApiKey))
 app.use(router)
 
 export default app
