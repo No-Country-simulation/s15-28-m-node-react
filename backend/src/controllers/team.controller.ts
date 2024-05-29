@@ -1,70 +1,89 @@
-import { Request, Response } from 'express'
-import { User } from '../models/users.model'
 import { Team } from '../models/teams.model'
-import { UserTeam } from '../models/userTeams.model'
+import {
+  messageError,
+  optionalFieldBody,
+  requeriedFieldsBody,
+} from '../utils/helpers'
+import { Request, Response } from '../utils/types.d'
+import { team } from '../zod/team.object'
 
-export class TeamController {
-  static async getAllTeams(_req: Request, res: Response): Promise<void> {
-    try {
-      const teams = await Team.findAll({ include: [User, UserTeam] })
-      res.status(200).json(teams)
-    } catch (error) {
-      res.status(500).json({ message: 'Error retrieving teams', error })
-    }
+export async function getAllTeams(_req: Request, res: Response) {
+  try {
+    const teams = await Team.findAll()
+    return res.status(200).json(teams)
+  } catch (error) {
+    return res.status(500).json({ message: 'Error retrieving teams', error })
   }
+}
 
-  static async getTeamById(req: Request, res: Response): Promise<void> {
+export async function getTeamById(req: Request, res: Response) {
+  try {
     const { uuid } = req.params
-    try {
-      const team = await Team.findByPk(uuid, { include: [User, UserTeam] })
-      if (team) {
-        res.status(200).json(team)
-      } else {
-        res.status(404).json({ message: 'Team not found' })
-      }
-    } catch (error) {
-      res.status(500).json({ message: 'Error retrieving the team', error })
-    }
-  }
+    if (!uuid) return res.status(400).json({ message: 'The uuid is required' })
 
-  static async createTeam(req: Request, res: Response): Promise<void> {
-    const { user_uuid, team_uuid } = req.body
-    try {
-      const newTeam = await Team.create({ user_uuid, team_uuid })
-      res.status(201).json(newTeam)
-    } catch (error) {
-      res.status(500).json({ message: 'Error creating the team', error })
-    }
-  }
+    const team = await Team.findByPk(uuid)
+    if (!team) return res.status(404).json({ message: 'Team not found' })
 
-  static async updateTeam(req: Request, res: Response): Promise<void> {
+    return res.status(200).json(team)
+  } catch (error) {
+    return res.status(500).json({ message: 'Error retrieving the team', error })
+  }
+}
+
+export async function createTeam(req: Request, res: Response) {
+  try {
+    const { body } = req
+    const [error, message] = requeriedFieldsBody({
+      body: req.body,
+      model: Team,
+      excludedFields: ['uuid'],
+    })
+    if (error !== 200) return res.status(error).json(message)
+    team.parse(body)
+
+    body.uuid = crypto.randomUUID()
+    await Team.create(body)
+    return res.status(201).json({ message: 'Team created successfully' })
+  } catch (err) {
+    const [error, message] = messageError(err)
+    return res.status(error).json(message)
+  }
+}
+
+export async function updateTeam(req: Request, res: Response) {
+  try {
     const { uuid } = req.params
-    const { user_uuid, team_uuid } = req.body
-    try {
-      const team = await Team.findByPk(uuid)
-      if (team) {
-        await team.update({ user_uuid, team_uuid })
-        res.status(200).json(team)
-      } else {
-        res.status(404).json({ message: 'Team not found' })
-      }
-    } catch (error) {
-      res.status(500).json({ message: 'Error updating the team', error })
-    }
-  }
+    const { body } = req
 
-  static async deleteTeam(req: Request, res: Response): Promise<void> {
-    const { uuid } = req.params
-    try {
-      const team = await Team.findByPk(uuid)
-      if (team) {
-        await team.destroy()
-        res.status(204).send()
-      } else {
-        res.status(404).json({ message: 'Team not found' })
-      }
-    } catch (error) {
-      res.status(500).json({ message: 'Error deleting the team', error })
-    }
+    const [error, message] = optionalFieldBody({
+      body: body,
+      model: Team,
+    })
+    if (error !== 200) return res.status(error).json(message)
+
+    const partialTeam = team.partial()
+    partialTeam.parse(body)
+
+    const teamFound = await Team.findByPk(uuid)
+    if (!teamFound) return res.status(404).json({ message: 'Team not found' })
+
+    const newTeam = await teamFound.update(body)
+    return res.status(200).json(newTeam)
+  } catch (err) {
+    const [error, message] = messageError(err)
+    return res.status(error).json(message)
+  }
+}
+
+export async function deleteTeam(req: Request, res: Response) {
+  const { uuid } = req.params
+  try {
+    const team = await Team.findByPk(uuid)
+    if (!team) return res.status(404).json({ message: 'Team not found' })
+
+    await team.destroy()
+    return res.status(204).json({ message: 'Team deleted successfully' })
+  } catch (error) {
+    return res.status(500).json({ message: 'Error deleting the team', error })
   }
 }
