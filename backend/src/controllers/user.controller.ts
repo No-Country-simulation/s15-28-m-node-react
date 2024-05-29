@@ -2,6 +2,11 @@ import { hash } from 'bcrypt'
 import { Request, Response } from 'express'
 import { User } from '../models/users.model'
 
+interface UserQueryParams {
+  role_id?: string
+  email?: string
+}
+
 const userKeys = Object.keys(User.getAttributes())
 
 const validateFields = (body: any) => {
@@ -59,12 +64,41 @@ export async function createUser(req: Request, res: Response) {
   }
 }
 
-export async function getUsers(_req: Request, res: Response) {
+export async function getUsers(req: Request, res: Response) {
   try {
-    const findUsers = await User.findAll()
+    const { role_id, email } = req.query as UserQueryParams
+
+    if (!role_id && !email) {
+      const findUsers = await User.findAll()
+      return res.status(200).json({
+        message: 'Lista de usuarios realizada con éxito.',
+        data: findUsers,
+      })
+    }
+
+    const whereClause: { [key: string]: any } = {}
+
+    if (role_id) {
+      whereClause.role_id = role_id
+    }
+
+    if (email) {
+      whereClause.email = email
+    }
+
+    const users = await User.findAll({
+      where: whereClause,
+    })
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        message: 'No se encontraron usuarios con los criterios especificados.',
+      })
+    }
+
     return res.status(200).json({
-      message: 'Lista de usuarios realizada con éxito.',
-      data: findUsers,
+      message: 'Usuarios encontrados con éxito.',
+      data: users,
     })
   } catch (error) {
     return res.status(500).json({
