@@ -336,49 +336,49 @@ paths:
           $ref: '#/components/responses/500'
 
   /team:
-  get:
-    summary: Get all teams
-    tags:
-      - Team
-    security:
-      - ApiKeyAuth: []
-    responses:
-      '200':
-        description: Teams retrieved successfully
+    get:
+      summary: Get all teams
+      tags:
+        - Team
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Teams retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '500':
+          $ref: '#/components/responses/500'
+
+    post:
+      summary: Create a new team
+      tags:
+        - Team
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        description: Team creation data
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Team'
-      '500':
-        $ref: '#/components/responses/500'
+      responses:
+        '201':
+          description: Team successfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Team created successfully.
 
-  post:
-    summary: Create a new team
-    tags:
-      - Team
-    security:
-      - ApiKeyAuth: []
-    requestBody:
-      description: Team creation data
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Team'
-    responses:
-      '201':
-        description: Team successfully created
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Team created successfully.
-
-      '500':
-        $ref: '#/components/responses/500'
+        '500':
+          $ref: '#/components/responses/500'
 
   /team/{id}:
     get:

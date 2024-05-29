@@ -3,6 +3,7 @@ import express from 'express'
 import morgan from 'morgan'
 import { router } from './routes'
 import { isApiKey } from './middlewares/apiKey.middleware'
+import { excludeRoutes } from './utils/helpers'
 
 const app = express()
 
@@ -13,7 +14,8 @@ app.use(morgan('dev'))
 app.disable('x-powered-by')
 
 // Routes
-app.use(isApiKey)
+
+app.use(excludeRoutes(['/api/v1/docs', '/api/docs'], isApiKey))
 app.use(router)
 
 export default app
