@@ -1,10 +1,9 @@
-import { Router } from "express";
-import { login, register } from "../controllers/auth.controller";
-import { isApiKey } from '../middlewares/apiKey.middleware';
+import { Router } from 'express'
+import { login, register } from '../controllers/auth.controller'
 
-const router = Router();
+const router = Router()
 
-router.post("/login", isApiKey, login);
-router.post("/register", isApiKey, register);
+router.post('/login', login)
+router.post('/register', register)
 
-export { router };
+export { router }

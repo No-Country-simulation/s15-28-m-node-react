@@ -1,20 +1,19 @@
-import { Router } from "express";
+import { Router } from 'express'
 import {
   createUser,
   deleteUser,
   getUserById,
   getUsers,
   updateUser,
-} from "../controllers/user.controller";
-import { isApiKey } from "../middlewares/apiKey.middleware";
-import { validateJWT } from "../middlewares/validateJWT.middleware";
+} from '../controllers/user.controller'
+import { validateJWT } from '../middlewares/validateJWT.middleware'
 
-const router = Router();
+const router = Router()
 
-router.get("/", isApiKey, getUsers);
-router.get("/:id",isApiKey, getUserById);
-router.post("/", isApiKey, createUser);
-router.put("/:id", isApiKey, validateJWT, updateUser);
-router.delete("/:id", isApiKey, validateJWT, deleteUser);
+router.get('/', getUsers)
+router.get('/:id', getUserById)
+router.post('/', createUser)
+router.put('/:id', validateJWT, updateUser)
+router.delete('/:id', validateJWT, deleteUser)
 
-export { router };
+export { router }
