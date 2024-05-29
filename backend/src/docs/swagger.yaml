@@ -22,6 +22,8 @@ tags:
     description: Operations about user
   - name: Auth
     description: Operations about authentication
+  - name: Team
+    description: Operations about team
 
 components:
   securitySchemes:
@@ -89,9 +91,21 @@ components:
           type: number
           description: User's role ID (1 or 2) (1 = freelancer, 2 = client)
           example: 1
+    Team:
+      type: object
+      properties:
+        uuid:
+          type: string
+          example: 12345678-1234-1234-1234-111111111111
+        name:
+          type: string
+          example: Team 1
+        description:
+          type: string
+          example: Team 1 description
 
   parameters:
-    UserId:
+    UUID:
       name: id
       in: path
       required: true
@@ -249,7 +263,7 @@ paths:
       security:
         - ApiKeyAuth: []
       parameters:
-        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/UUID'
       responses:
         '200':
           description: User retrieved successfully
@@ -269,7 +283,7 @@ paths:
       security:
         - ApiKeyAuth: []
       parameters:
-        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/UUID'
       requestBody:
         description: User update data
         required: true
@@ -304,7 +318,7 @@ paths:
       security:
         - ApiKeyAuth: []
       parameters:
-        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/UUID'
       responses:
         '200':
           description: El usuario ha sido eliminado con éxito.
@@ -320,3 +334,136 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
+
+  /team:
+  get:
+    summary: Get all teams
+    tags:
+      - Team
+    security:
+      - ApiKeyAuth: []
+    responses:
+      '200':
+        description: Teams retrieved successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      '500':
+        $ref: '#/components/responses/500'
+
+  post:
+    summary: Create a new team
+    tags:
+      - Team
+    security:
+      - ApiKeyAuth: []
+    requestBody:
+      description: Team creation data
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Team'
+    responses:
+      '201':
+        description: Team successfully created
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Team created successfully.
+
+      '500':
+        $ref: '#/components/responses/500'
+
+  /team/{id}:
+    get:
+      summary: Get a team by ID
+      tags:
+        - Team
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UUID'
+      responses:
+        '200':
+          description: Team retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+
+    put:
+      summary: Update a team
+      tags:
+        - Team
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UUID'
+      requestBody:
+        description: Team update data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '200':
+          description: Team successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          description: team not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Team not found
+        '500':
+          $ref: '#/components/responses/500'
+
+    delete:
+      summary: Delete a team
+      tags:
+        - Team
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UUID'
+      responses:
+        '200':
+          description: Team deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Team deleted successfully
+          '404':
+            description: team not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      example: Team not found
+          '500':
+            $ref: '#/components/responses/500'

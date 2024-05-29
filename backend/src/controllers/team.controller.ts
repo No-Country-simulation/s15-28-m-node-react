@@ -67,7 +67,9 @@ export async function updateTeam(req: Request, res: Response) {
     const teamFound = await Team.findByPk(uuid)
     if (!teamFound) return res.status(404).json({ message: 'Team not found' })
 
-    const newTeam = await teamFound.update(body)
+    await teamFound.update(body)
+
+    const newTeam = await Team.findByPk(uuid)
     return res.status(200).json(newTeam)
   } catch (err) {
     const [error, message] = messageError(err)
