@@ -7,7 +7,13 @@ interface Props {
   excludedFields?: string[]
 }
 
-export function requeriedFieldsBody({ body, model, excludedFields }: Props) {
+type RequeriedFieldsBodyResponse = [number, { message: string }]
+
+export function requeriedFieldsBody({
+  body,
+  model,
+  excludedFields,
+}: Props): RequeriedFieldsBodyResponse {
   const attributes = Object.keys(model.getAttributes())
   const requiredFields = attributes.filter(
     (attribute) => !excludedFields?.includes(attribute)
@@ -34,7 +40,10 @@ export function requeriedFieldsBody({ body, model, excludedFields }: Props) {
   return [200, { message: 'Todos los campos son validos' }]
 }
 
-export function optionalFieldBody({ body, model }: Props) {
+export function optionalFieldBody({
+  body,
+  model,
+}: Props): RequeriedFieldsBodyResponse {
   const attributes = Object.keys(model.getAttributes())
 
   const invalidFields = Object.keys(body).filter(
