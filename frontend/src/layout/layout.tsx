@@ -12,7 +12,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Box sx={{ display: 'flex', flexDirection: 'row-reverse'}}>
         <CssBaseline />
         <Header />
-          <Sidebar />
+        {/* <Sidebar /> */}
       </Box>
       {children}
     </>
