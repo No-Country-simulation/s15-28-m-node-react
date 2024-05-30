@@ -12,6 +12,12 @@ const isDate = (inputValue: any, field: string): string | null => {
     : null;
 };
 
+const isTime = (inputValue: any, field:string): string | null =>  {
+  return (inputValue instanceof Date && !Number.isNaN(inputValue.getTime()))
+    ? `El ${field} no es un tiempo válido.`
+    : null;
+}
+
 //validate field not empty.
 const isNotEmpty = (inputValue: any, field: string): string | null => {
   return inputValue.length === 0 ? `El ${field} no puede estar vacío.` : null;
@@ -35,7 +41,7 @@ const hasValidateRequirements = (
 const timerKeys = Object.keys(Stopwatch.getAttributes());
 
 // Validate init_date.
-export const validateInitDate = (inputValue: any, field: string) => {
+const validateInitDate = (inputValue: any, field: string) => {
   /*
   Campo obligatorio.
     Tipo Calendario. from ok
@@ -46,7 +52,7 @@ export const validateInitDate = (inputValue: any, field: string) => {
   */
   const regexArgInitDate = [
     {
-      reg: /^\d{4}[-/]\d{2}[-/]\d{2}( \d{2}:\d{2}:\d{2})?$/,
+      reg: /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{2}$/,
       msn: "no es valida.",
     },
   ];
@@ -58,7 +64,7 @@ export const validateInitDate = (inputValue: any, field: string) => {
   return errors ?? inputValue;
 };
 // Validate end_date.
-export const validateEndDate = (inputValue: any, field: string) => {
+const validateEndDate = (inputValue: any, field: string) => {
   /*
   Campo obligatorio.
     Tipo Calendario. from ok
@@ -69,7 +75,7 @@ export const validateEndDate = (inputValue: any, field: string) => {
   */
   const regexArgEndDate = [
     {
-      reg: /^\d{4}[-/]\d{2}[-/]\d{2}( \d{2}:\d{2}:\d{2})?$/,
+      reg: /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{2}$/,
       msn: "no es valida.",
     },
   ];
@@ -81,7 +87,7 @@ export const validateEndDate = (inputValue: any, field: string) => {
   return errors ?? inputValue;
 };
 // Validate total_date.
-export const validateTotalDate = (inputValue: any, field: string) => {
+const validateTotalDate = (inputValue: any, field: string) => {
   /*
   Campo obligatorio.
     Tipo Calendario. from ok
@@ -92,22 +98,22 @@ export const validateTotalDate = (inputValue: any, field: string) => {
   */
   const regexArgTotalDate = [
     {
-      reg: /^(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)$/,
+      reg:  /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d{1,2})?$/,
       msn: "no es valido.",
     },
   ];
   const errors =
     isRequired(inputValue, field) ??
     isNotEmpty(inputValue, field) ??
-    isDate(inputValue, field) ??
+    isTime(inputValue, field) ??
     hasValidateRequirements(inputValue, field, regexArgTotalDate);
   return errors ?? inputValue;
 };
 
 //validate role.
-export const validateTask = (
+const validateTask = (
   inputValue: number,
-  filed: string
+  field: string
 ): number | string => {
   /*
   validación del rol
@@ -118,14 +124,14 @@ export const validateTask = (
   */
   const regexArgTask = [
     {
-      reg: /^[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-4[0-9a-fA-F]{3}\-(8|9|a|b)[0-9a-fA-F]{3}\-[0-9a-fA-F]{12}$/,
+      reg: /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/,
       msn: "Debe ser un uuid.",
     },
   ];
   const errors =
-    isRequired(inputValue, filed) ??
-    isNotEmpty(inputValue, filed) ??
-    hasValidateRequirements(inputValue, "role", regexArgTask);
+    isRequired(inputValue, field) ??
+    isNotEmpty(inputValue, field) ??
+    hasValidateRequirements(inputValue, field, regexArgTask);
   return errors ?? inputValue;
 };
 
@@ -139,7 +145,7 @@ export const validateFields = (body: any) => {
   for (const key of bodyKey) {
     if (!timerKeys.includes(key)) {
       return {
-        message: `El campo ${key} no está definido en el modelo usuario.`,
+        message: `El campo ${key} no está definido en el modelo cronometro.`,
       };
     }
   }
@@ -149,7 +155,7 @@ export const validateFields = (body: any) => {
 // Validate field requerid.
 export const validateRequeridFields = (body: any) => {
   const requiredFields = timerKeys.filter(
-    (key) => User.getAttributes()[key].allowNull === false
+    (key) => Stopwatch.getAttributes()[key].allowNull === false
   );
   for (const field of requiredFields) {
     if (!body[field]) {
