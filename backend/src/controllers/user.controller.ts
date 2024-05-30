@@ -35,6 +35,7 @@ export async function createUser(req: Request, res: Response) {
     }
     const hashedPassword = await hash(body.password, 10);
     body.password = hashedPassword;
+    body.uuid = crypto.randomUUID();
     const newUser = await User.create(body);
     return res.status(201).json({
       message: "El usuario ha sido creado con éxito.",
