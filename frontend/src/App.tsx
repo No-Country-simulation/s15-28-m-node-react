@@ -4,8 +4,10 @@ import { BrowserRouter as Router, Route, Routes,/*  Navigate */ } from 'react-ro
 import { AuthProvider, /* useAuth */ } from './context/auth-context';
 import Layout from './layout/layout';
 import Login from './components/users/login';
-import MainContent from './components/main.content';
+import MainContent from './components/MainContent';
 import Register from './components/users/register';
+import { Projects } from './pages/Projects';
+import { Clients } from './pages/Clients';
 
 const App: React.FC = () => {
   return (
@@ -14,7 +16,10 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path='/register' element={<Register/>}/>
-          <Route path="/" element={<Layout><MainContent /></Layout>} />
+          <Route path="/dashboard" element={<Layout><MainContent /></Layout>} />
+          <Route path='/dashboard/projects' element={<Layout><Projects/></Layout>} />
+          <Route path='/dashboard/clients' element={<Layout><Clients/></Layout>} />
+          <Route path="*" element={<Login />} />
         </Routes>
       </Router>
     </AuthProvider>

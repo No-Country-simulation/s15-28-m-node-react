@@ -1,5 +1,6 @@
 import { type ModelStatic, type Model } from 'sequelize'
 import { ZodError } from 'zod'
+import { Request, Response, NextFunction } from 'express'
 
 interface Props {
   body: any
@@ -7,7 +8,13 @@ interface Props {
   excludedFields?: string[]
 }
 
-export function requeriedFieldsBody({ body, model, excludedFields }: Props) {
+type RequeriedFieldsBodyResponse = [number, { message: string }]
+
+export function requeriedFieldsBody({
+  body,
+  model,
+  excludedFields,
+}: Props): RequeriedFieldsBodyResponse {
   const attributes = Object.keys(model.getAttributes())
   const requiredFields = attributes.filter(
     (attribute) => !excludedFields?.includes(attribute)
@@ -34,7 +41,10 @@ export function requeriedFieldsBody({ body, model, excludedFields }: Props) {
   return [200, { message: 'Todos los campos son validos' }]
 }
 
-export function optionalFieldBody({ body, model }: Props) {
+export function optionalFieldBody({
+  body,
+  model,
+}: Props): RequeriedFieldsBodyResponse {
   const attributes = Object.keys(model.getAttributes())
 
   const invalidFields = Object.keys(body).filter(
@@ -84,4 +94,19 @@ export function messageError(error: ErrorType) {
       error: 'Unknown error',
     },
   ]
+}
+
+// Middleware para excluir ciertas rutas
+export function excludeRoutes(
+  paths: string[],
+  middleware: (req: Request, res: Response, next: NextFunction) => void
+) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    // Verificar si la ruta actual comienza con alguna de las rutas excluidas
+    if (paths.some((path) => req.path.startsWith(path))) {
+      return next()
+    } else {
+      return middleware(req, res, next)
+    }
+  }
 }

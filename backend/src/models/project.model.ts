@@ -31,7 +31,7 @@ export const Project = sequelize.define(
       type: DataTypes.TEXT,
     },
     id_cliente: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
     },
     email_client: {
       type: DataTypes.STRING,
@@ -39,10 +39,12 @@ export const Project = sequelize.define(
     is_completed: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
     },
     is_active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: true,
     },
     status_uuid: {
       type: UUID,
