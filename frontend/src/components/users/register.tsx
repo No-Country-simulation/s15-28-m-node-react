@@ -30,7 +30,7 @@ interface Errors {
   password: string;
   confirmPassword: string;
   role: number;
-  isRole: string;
+  isRole?: string;
   birthDate: string;
   phone: string;
 }
@@ -42,7 +42,6 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [role, setRole] = useState<number>(0);
-  const [isRole, setIsRole] = useState("")
   const [birthDate, setBirthDate] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [errors, setErrors] = useState<Errors>({
@@ -60,87 +59,86 @@ const Register: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] =
     useState<boolean>(false);
   const [valid, setValid] = useState<boolean>(true);
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const newErrors: Errors = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      role: 0,
-      isRole: "",
-      birthDate: "",
-      phone: "",
-    };
+ 
 
-    if (!validateName(firstName)) {
-      newErrors.firstName = "Please enter a valid first name.";
-      setValid(false);
-    }
 
-    if (!validateName(lastName)) {
-      newErrors.lastName = "Please enter a valid last name.";
-      setValid(false);
-    }
-
-    if (!validateEmail(email)) {
-      newErrors.email = "Please enter a valid email address.";
-      setValid(false);
-    }
-
-    if (!validatePassword(password)) {
-      newErrors.password =
-        "Password must be 8-30 characters long and include a number, a symbol, an uppercase and a lowercase letter.";
-      setValid(false);
-    }
-
-    if (password !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match.";
-      setValid(false);
-    }
-
-    if (!role) {
-      newErrors.isRole = "Please select your role.";
-      setValid(false);
-    }
-
-    if (!birthDate || !validateBirthDate(birthDate)) {
-      newErrors.birthDate = "Please enter a valid birth date.";
-      setValid(false);
-    }
-
-    if (!phone && !validatePhone(phone)) {
-      newErrors.phone = "Please enter a valid phone number.";
-      setValid(false);
-    }
-    setErrors(newErrors);
-
-    if (valid) {
-      isRole === "Freelancer" ? setRole(1) : setRole(2);
-      // Submit the form or perform other actions
-      console.log("Form submitted:", {
-        firstName,
-        lastName,
-        email,
-        password,
-        role,
-        birthDate,
-        phone,
-      });
-    }
-
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPassword("");
-    setConfirmPassword("");
-    setRole(0);
-    setIsRole("");
-    setBirthDate("");
-    setPhone("");
+const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  e.preventDefault();
+  const newErrors: Errors = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: 0,
+    birthDate: "",
+    phone: "",
   };
 
+  if (!validateName(firstName)) {
+    newErrors.firstName = "Please enter a valid first name.";
+    setValid(false);
+  }
+
+  if (!validateName(lastName)) {
+    newErrors.lastName = "Please enter a valid last name.";
+    setValid(false);
+  }
+
+  if (!validateEmail(email)) {
+    newErrors.email = "Please enter a valid email address.";
+    setValid(false);
+  }
+
+  if (!validatePassword(password)) {
+    newErrors.password =
+      "Password must be 8-30 characters long and include a number, a symbol, an uppercase and a lowercase letter.";
+    setValid(false);
+  }
+
+  if (password !== confirmPassword) {
+    newErrors.confirmPassword = "Passwords do not match.";
+    setValid(false);
+  }
+
+  if (!role) {
+    newErrors.isRole = "Please select your role.";
+    setValid(false);
+  }
+
+  if (!birthDate || !validateBirthDate(birthDate)) {
+    newErrors.birthDate = "Please enter a valid birth date.";
+    setValid(false);
+  }
+
+  if (!phone && !validatePhone(phone)) {
+    newErrors.phone = "Please enter a valid phone number.";
+    setValid(false);
+  }
+  setErrors(newErrors);
+
+  if (valid) {
+    // Submit the form or perform other actions
+    console.log("Form submitted:", {
+      "first_name": firstName,
+      "last_name": lastName,
+      "email": email,
+      "password": password,
+      "role_id": role,
+      "birthdate": birthDate,
+      "phone": phone,
+    });
+  }
+
+  setFirstName("");
+  setLastName("");
+  setEmail("");
+  setPassword("");
+  setConfirmPassword("");
+  setRole(0);
+  setBirthDate("");
+  setPhone("");
+};
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -273,12 +271,12 @@ const Register: React.FC = () => {
               <Select
                 labelId="role-label"
                 id="role"
-                value={isRole}
-                onChange={(e) => setIsRole(e.target.value as string)}
+                value={role}
+                onChange={(e) => e.target.value === "0" ? setRole(1) : setRole(2)}
                 label="Role"
               >
-                <MenuItem value="Freelancer">Freelancer</MenuItem>
-                <MenuItem value="Client">Client</MenuItem>
+                <MenuItem value="0">Freelancer</MenuItem>
+                <MenuItem value="1">Client</MenuItem>
               </Select>
               {errors.isRole && (
                 <Typography variant="body2" color="error">
