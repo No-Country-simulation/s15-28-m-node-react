@@ -12,8 +12,8 @@ import {
 
 export async function login(req: Request, res: Response) {
   try {
-    const body = req.body;
-    const validateBodyInModel = validateFields(body);
+    const body = req.body
+    const validateBodyInModel = validateFields(body)
     if (validateBodyInModel !== true)
       return res.status(400).json(validateBodyInModel);
     const validateRequeridBody = validateRequeridFieldsCustom(body);
@@ -32,32 +32,35 @@ export async function login(req: Request, res: Response) {
     if (!userLog) {
       return res
         .status(401)
-        .json({ message: "El email no esta asociado a ningún usuario." });
+        .json({ message: 'El email no esta asociado a ningún usuario.' })
     }
-    const passwordEncrypt = userLog.password;
-    const passwordMatch = await compare(body.password, passwordEncrypt);
+    const passwordEncrypt = userLog.password
+    const passwordMatch = await compare(body.password, passwordEncrypt)
     if (!passwordMatch) {
-      return res.status(401).json({ message: "La contraseña es incorrecta." });
+      return res.status(401).json({ message: 'La contraseña es incorrecta.' })
     }
     // Generando token.
-    const token = sign({ id: userLog.id }, `${Secret}`, { expiresIn: Expire });
+    const token = sign({ id: userLog.uuid }, `${secretJWT}`, {
+      expiresIn: expireJWT,
+    })
+    res.cookie('token', token)
     // responde
     return res
       .status(200)
-      .json({ message: "El inicio de sesión ha sido exitoso.", token });
+      .json({ message: 'El inicio de sesión ha sido exitoso.', token })
   } catch (error) {
     return res.status(500).json({
-      message: "El inicio de sesión tiene un error interno del Servidor,",
-    });
+      message: 'El inicio de sesión tiene un error interno del Servidor,',
+    })
   }
 }
 
 export async function register(req: Request, res: Response) {
   try {
-    await createUser(req, res);
+    await createUser(req, res)
   } catch (error) {
     return res.status(500).json({
-      message: "El registro de usuario tiene un error interno del Servidor.",
-    });
+      message: 'El registro de usuario tiene un error interno del Servidor.',
+    })
   }
 }
