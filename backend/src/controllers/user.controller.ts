@@ -21,14 +21,14 @@ export async function createUser(req: Request, res: Response) {
     const validateRequeridBody = validateRequeridFields(body);
     if (validateRequeridBody !== true)
       return res.status(400).json(validateRequeridBody);
-    console.log(validateRequeridFields(body));
     const bodyValidate = validateFieldBody(body);
-    if (bodyValidate.length !== body.length) {
-      return res.status(400).json(bodyValidate);
-    }
-    const validateEmail = await User.findOne({
-      where: { email: body.email },
-    });
+    const bodyValidateKeys = Object.keys(bodyValidate);
+    const validate: boolean = bodyValidateKeys.every(
+      (key: string) => bodyValidate[key] === body[key]
+    );
+    if (!validate)
+      return res.status(400).json({ message: bodyValidate });
+    const validateEmail = await User.findOne({ where: { email: body.email } });
     if (validateEmail !== null) {
       return res
         .status(400)
@@ -37,9 +37,10 @@ export async function createUser(req: Request, res: Response) {
     const hashedPassword = await hash(body.password, 10);
     body.password = hashedPassword;
     const newUser = await User.create(body);
-    return res
-      .status(201)
-      .json({ message: "El usuario ha sido creado con éxito.", data: newUser });
+    return res.status(201).json({
+      message: "El usuario ha sido creado con éxito.",
+      data: newUser,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -115,8 +116,14 @@ export async function updateUser(req: Request, res: Response) {
     const id = req.params.id;
     if (!id) return res.status(400).json({ message: "El id es requerido." });
     const body = req.body;
-    const validate = validateFields(body);
-    if (validate !== true) return res.status(400).json(validate);
+    const validateField = validateFields(body);
+    if (validateField !== true) return res.status(400).json(validateField);
+      const bodyValidate = validateFieldBody(body);
+      const bodyValidateKeys = Object.keys(bodyValidate);
+      const validate: boolean = bodyValidateKeys.every(
+        (key: string) => bodyValidate[key] === body[key]
+      );
+      if (!validate) return res.status(400).json({ message: bodyValidate });
     const [updated] = await User.update(body, {
       where: { uuid: id },
     });

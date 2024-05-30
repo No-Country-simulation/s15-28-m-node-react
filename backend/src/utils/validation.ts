@@ -6,44 +6,47 @@ const isRequired = (inputValue: any, field: string): string | null => {
 };
 
 //validate field string.
-const isString = (inputValue: any, field: string) : string|null => {
+const isString = (inputValue: any, field: string): string | null => {
   return typeof inputValue !== "string" ? `El ${field} no es un texto.` : null;
 };
 
 // Validate field number.
-const isNumber = (inputValue: any, field: string) : string|null => {
+const isNumber = (inputValue: any, field: string): string | null => {
   return typeof inputValue !== "number" ? `El ${field} no es un número.` : null;
 };
 
 // Validate field date.
-const isDate = (inputValue: any, field: string) : string|null  => {
+const isDate = (inputValue: any, field: string): string | null => {
   return Number.isNaN(Date.parse(inputValue))
     ? `El ${field} no es una fecha válida.`
     : null;
 };
 
 //validate field not empty.
-const isNotEmpty = (inputValue: any, field: string) : string|null => {
+const isNotEmpty = (inputValue: any, field: string): string | null => {
   return inputValue.length === 0 ? `El ${field} no puede estar vacío.` : null;
 };
 
 // Validate field age.
-const isValidateAge = (inputValue: any, field: string) : string|null => {
+const isValidateAge = (inputValue: any, field: string): string | null => {
   const birthDate = new Date(inputValue);
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
   const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0) if (m === 0) if (today.getDate() < birthDate.getDate())
-    age--;
+  if (m < 0) if (m === 0) if (today.getDate() < birthDate.getDate()) age--;
   return age >= 19 && age <= 99
     ? null
     : `El ${field} debe ser mayor de 18 y menor de 99.`;
 };
 
 //validate field requirements.
-const hasValidateRequirements = (inputValue: any, field: string, regexArg: any): string | null => {
+const hasValidateRequirements = (
+  inputValue: any,
+  field: string,
+  regexArg: any
+): string | null => {
   const error = regexArg
-    .map((reg:any ) => {
+    .map((reg: any) => {
       return reg.reg.test(inputValue) ? null : `El ${field} ${reg.msn}`;
     })
     .filter((err: any) => err !== null)[0];
@@ -62,36 +65,6 @@ const formatValue = (inputValue: string): string => {
 
 // User models  keys
 const userKeys = Object.keys(User.getAttributes());
-
-// Validate body fields
-export const validateFields = (body: any)  => {
-  const bodyKey = Object.keys(body)
-  if (bodyKey.length === 0) {
-    return { message: 'No hay campos en el body.' }
-  }
-  // Validar campos contra modelos
-  for (const key of bodyKey) {
-    if (!userKeys.includes(key)) {
-      return {
-        message: `El campo ${key} no está definido en el modelo usuario.`,
-      }
-    }
-  }
-  return true
-}
-
-// Validate field requerid.
-export const validateRequeridFields = (body: any) => {
-  const requiredFields = userKeys.filter(
-    (key) => User.getAttributes()[key].allowNull === false
-  )
-  for (const field of requiredFields) {
-    if (!body[field]) {
-      return { message: `El campo ${field} es requerido.` }
-    }
-  }
-  return true
-}
 
 // Validate avatar.
 const validateAvatar = (inputValue: string, field: string): string => {
@@ -154,7 +127,7 @@ const validateField = (inputValue: string, field: string): string => {
 };
 
 // Validate email.
-const validateEmail = (inputValue: string, filed:string): string => {
+const validateEmail = (inputValue: string, filed: string): string => {
   /*
     Validación del Email:
       Campo obligatorio. ok
@@ -278,7 +251,10 @@ const validatePassword = (password: string): string => {
 };
 
 // Validate birthdate.
-export const validateBirthdate = (inputValue: any, field: string): string | any => {
+export const validateBirthdate = (
+  inputValue: any,
+  field: string
+): string | any => {
   /*
   Campo obligatorio.
     Tipo Calendario. from ok
@@ -303,7 +279,7 @@ export const validateBirthdate = (inputValue: any, field: string): string | any 
 };
 
 // Validate phone.
-export const validatePhone = (inputValue: string, field: string) : string  => {
+export const validatePhone = (inputValue: string, field: string): string => {
   /*
   Validación de Teléfono:
     Campo no obligatorio. ok
@@ -331,7 +307,10 @@ export const validatePhone = (inputValue: string, field: string) : string  => {
 };
 
 //validate role.
-export const validateRole = (inputValue: number, filed:string): number | string => {
+export const validateRole = (
+  inputValue: number,
+  filed: string
+): number | string => {
   /*
   validación del rol
     Campo obligatorio.ok
@@ -348,14 +327,80 @@ export const validateRole = (inputValue: number, filed:string): number | string 
   const errors =
     isRequired(inputValue, filed) ||
     isNumber(inputValue, filed) ||
-    isNotEmpty(inputValue, filed);
-  hasValidateRequirements(inputValue, "role", regexArgRole);
+    isNotEmpty(inputValue, filed) ||
+    hasValidateRequirements(inputValue, "role", regexArgRole);
   return errors || inputValue;
 };
 
+export const validateRequeridFieldsCustom = (body: any) => {
+  const requiredFields = ["email", "password"];
+  const extraFields = Object.keys(body).filter(
+    (key) => !requiredFields.includes(key)
+  );
+  if (extraFields.length > 0) {
+    if (extraFields.length === 1) {
+      return {
+        message: `El campo ${extraFields[0]} no es admitido en el inicio de sesión.`,
+      };
+    } else {
+      return {
+        message: `Los campos ${extraFields.join(
+          ", "
+        )} no son admitidos en el inicio de sesión.`,
+      };
+    }
+  }
+  const invalidFields: string[] = [];
+  for (const field of requiredFields) {
+    if (!body[field]) {
+      invalidFields.push(field);
+    }
+  }
+  if (invalidFields.length > 0) {
+    if (invalidFields.length === 1) {
+      return { message: `El campo ${invalidFields[0]} es requerido.` };
+    } else {
+      return {
+        message: `Los campos ${invalidFields.join(", ")} son inválidos.`,
+      };
+    }
+  }
+  return true;
+};
+
+// Validate body fields
+export const validateFields = (body: any) => {
+  const bodyKey = Object.keys(body);
+  if (bodyKey.length === 0) {
+    return { message: "No hay campos en el body." };
+  }
+  // Validar campos contra modelos
+  for (const key of bodyKey) {
+    if (!userKeys.includes(key)) {
+      return {
+        message: `El campo ${key} no está definido en el modelo usuario.`,
+      };
+    }
+  }
+  return true;
+};
+
+// Validate field requerid.
+export const validateRequeridFields = (body: any) => {
+  const requiredFields = userKeys.filter(
+    (key) => User.getAttributes()[key].allowNull === false
+  );
+  for (const field of requiredFields) {
+    if (!body[field]) {
+      return { message: `El campo ${field} es requerido.` };
+    }
+  }
+  return true;
+};
+
+
 // Validate Field body
 export const validateFieldBody = (body: any) => {
-  let resp:any = {};
   const isValidateBody:any = {
     avatar: {
       fn: validateAvatar,
@@ -366,10 +411,10 @@ export const validateFieldBody = (body: any) => {
     last_name: {
       fn: validateField,
     },
-    Email: {
+    email: {
       fn: validateEmail,
     },
-    Password: {
+    password: {
       fn: validatePassword,
     },
     phone: {
@@ -378,11 +423,11 @@ export const validateFieldBody = (body: any) => {
     birthdate: {
       fn: validateBirthdate,
     },
-    role: {
+    role_id: {
       fn: validateRole,
     },
   };
-
+  let resp:any = {};
   const bodyKeys = Object.keys(body);
 
   bodyKeys.forEach((key) => {
@@ -391,20 +436,19 @@ export const validateFieldBody = (body: any) => {
   });
 
   // Comprueba si todos los valores de resp son iguales a los de body
-  const allValuesEqual = bodyKeys.every((key) => resp[key] === body[key]);
+  const allValuesEqual = bodyKeys.every(key => resp[key] === body[key]);
 
   if (allValuesEqual) {
     return body;
   } else {
     // Filtra las claves de resp que no son iguales a las de body
-    const unequalKeys = bodyKeys.filter((key) => resp[key] !== body[key]);
+    const unequalKeys = bodyKeys.filter(key => resp[key] !== body[key]);
 
     // Crea un nuevo objeto con solo las claves que no son iguales
-    const unequalResp: { [key: string]: any } = {};
-    unequalKeys.forEach((key) => {
+    const unequalResp:any = {};
+    unequalKeys.forEach(key => {
       unequalResp[key] = resp[key];
     });
-
     return unequalResp;
   }
-};
+}

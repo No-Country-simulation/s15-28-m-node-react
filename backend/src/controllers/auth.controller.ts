@@ -4,61 +4,11 @@ import { sign } from "jsonwebtoken";
 import { createUser } from "./user.controller";
 import { User } from "../models/users.model";
 import { Expire, Secret } from "../utils/config";
-
-const userKeys = Object.keys(User.getAttributes());
-
-const validateFields = (body: any) => {
-  // No este vació el Cuerpo de la petición
-  const bodyKey = Object.keys(body);
-  if (bodyKey.length === 0) {
-    return { message: "No hay campos en el cuerpo de la petición." };
-  }
-  // Validar campos contra modelos
-  for (const key of bodyKey) {
-    if (!userKeys.includes(key)) {
-      return {
-        message: `El campo ${key} no está definido en el modelo usuario.`,
-      };
-    }
-  }
-  return true;
-};
-
-const validateRequeridFieldsCustom = (body: any) => {
-  const requiredFields = ["email", "password"];
-  const extraFields = Object.keys(body).filter(
-    (key) => !requiredFields.includes(key)
-  );
-  if (extraFields.length > 0) {
-    if (extraFields.length === 1) {
-      return {
-        message: `El campo ${extraFields[0]} no es admitido en el inicio de sesión.`,
-      };
-    } else {
-      return {
-        message: `Los campos ${extraFields.join(
-          ", "
-        )} no son admitidos en el inicio de sesión.`,
-      };
-    }
-  }
-  const invalidFields: string[] = [];
-  for (const field of requiredFields) {
-    if (!body[field]) {
-      invalidFields.push(field);
-    }
-  }
-  if (invalidFields.length > 0) {
-    if (invalidFields.length === 1) {
-      return { message: `El campo ${invalidFields[0]} es requerido.` };
-    } else {
-      return {
-        message: `Los campos ${invalidFields.join(", ")} son inválidos.`,
-      };
-    }
-  }
-  return true;
-};
+import {
+  validateFieldBody,
+  validateFields,
+  validateRequeridFieldsCustom,
+} from "../utils/validation";
 
 export async function login(req: Request, res: Response) {
   try {
@@ -69,8 +19,16 @@ export async function login(req: Request, res: Response) {
     const validateRequeridBody = validateRequeridFieldsCustom(body);
     if (validateRequeridBody !== true)
       return res.status(400).json(validateRequeridBody);
+    const bodyValidate = validateFieldBody(body);
+    const bodyValidateKeys = Object.keys(bodyValidate);
+    const validate: boolean = bodyValidateKeys.every(
+      (key: string) => bodyValidate[key] === body[key]
+    );
+    if (!validate) return res.status(400).json({ message: bodyValidate });
     // valida credenciales
-    const userLog: any = await User.findOne({ where: { email: body.email } });
+    const userLog: any = await User.findOne({
+      where: { email: body.email },
+    });
     if (!userLog) {
       return res
         .status(401)
