@@ -5,7 +5,7 @@ import { Task } from './tasks.model'
 const { UUID, UUIDV4 } = DataTypes
 
 export const Stopwatch = sequelize.define(
-  'stopwatches',
+  'stopwatch',
   {
     uuid: {
       type: UUID,
@@ -30,7 +30,7 @@ export const Stopwatch = sequelize.define(
     },
   },
   {
-    tableName: 'stopwatches',
+    tableName: 'stopwatch',
     timestamps: false,
   }
 )

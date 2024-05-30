@@ -35,7 +35,7 @@ importers:
         specifier: ^8.11.5
         version: 8.11.5
       sequelize:
-        specifier: ^6.37.3
+        specifier: 6.37.3
         version: 6.37.3(pg@8.11.5)
       serve-favicon:
         specifier: 2.5.0

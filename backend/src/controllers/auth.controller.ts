@@ -24,7 +24,7 @@ const validateFields = (body: any) => {
   return true;
 };
 
-const validateRequeridFields = (body: any) => {
+const validateRequeridFieldsCustom = (body: any) => {
   const requiredFields = ["email", "password"];
   const extraFields = Object.keys(body).filter(
     (key) => !requiredFields.includes(key)
@@ -66,7 +66,7 @@ export async function login(req: Request, res: Response) {
     const validateBodyInModel = validateFields(body);
     if (validateBodyInModel !== true)
       return res.status(400).json(validateBodyInModel);
-    const validateRequeridBody = validateRequeridFields(body);
+    const validateRequeridBody = validateRequeridFieldsCustom(body);
     if (validateRequeridBody !== true)
       return res.status(400).json(validateRequeridBody);
     // valida credenciales
