@@ -2,6 +2,6 @@
 
 export const Project = () => {
   return (
-    <div className="">ProjectsView</div>
+    <div>ProjectsView</div>
   )
 }
