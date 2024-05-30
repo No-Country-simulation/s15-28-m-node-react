@@ -9,11 +9,22 @@ export async function createProject(req: Request, res: Response) {
     const [error, message] = requeriedFieldsBody({
       body: body,
       model: Project,
-      excludedFields: ['uuid'],
+      excludedFields: [
+        'uuid',
+        'id_cliente',
+        'init_date',
+        'end_date',
+        'status_uuid',
+        'custom_label_id',
+        'user_uuid',
+        'is_completed',
+        'is_active',
+      ],
     })
-
+    // Comprobar que el req.userId esta funcionando correctamente
     if (error !== 200) return res.status(error).json(message)
-
+    body.status_uuid = 'cb01e587-9501-4370-9fd0-d2ab7b3e07d3' // Creado en BD
+    body.user_uuid = req.userId // id del usuario por token
     body.uuid = crypto.randomUUID()
     const project = await Project.create(body)
     return res.status(201).json(project)

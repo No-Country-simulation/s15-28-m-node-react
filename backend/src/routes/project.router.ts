@@ -6,10 +6,11 @@ import {
   getProjects,
   updateProject,
 } from '../controllers/project.controller'
+import { authenticateToken } from '../middlewares/authApiKey.middleware'
 
 const router = Router()
 
-router.post('/', createProject)
+router.post('/', authenticateToken, createProject)
 router.get('/', getProjects)
 router.get('/:id', getProjectById)
 router.put('/:id', updateProject)
