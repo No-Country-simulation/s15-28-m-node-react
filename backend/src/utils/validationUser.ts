@@ -82,11 +82,11 @@ const validateAvatar = (inputValue: string, field: string): string => {
     },
   ];
   const errors =
-    isRequired(inputValue, field) ||
-    isNotEmpty(inputValue, field) ||
-    isString(inputValue, field) ||
+    isRequired(inputValue, field) ??
+    isNotEmpty(inputValue, field) ??
+    isString(inputValue, field) ??
     hasValidateRequirements(inputValue, field, regexArgImage);
-  return errors || inputValue;
+  return errors ?? inputValue;
 };
 // Validate Filed first_name and last_name.
 const validateField = (inputValue: string, field: string): string => {
@@ -102,7 +102,7 @@ const validateField = (inputValue: string, field: string): string => {
   inputValue = inputValue.trim();
   const regexArgField = [
     {
-      reg: /^[^0-9]+$/,
+      reg: /^\D+$/,
       msn: "no debe tener caracteres numéricos.",
     },
     {
@@ -119,11 +119,11 @@ const validateField = (inputValue: string, field: string): string => {
     },
   ];
   const errors =
-    isRequired(inputValue, field) ||
-    isString(inputValue, field) ||
-    isNotEmpty(inputValue, field) ||
+    isRequired(inputValue, field) ??
+    isString(inputValue, field) ??
+    isNotEmpty(inputValue, field) ??
     hasValidateRequirements(inputValue, field, regexArgField);
-  return errors || formatValue(inputValue);
+  return errors ?? formatValue(inputValue);
 };
 
 // Validate email.
@@ -197,11 +197,11 @@ const validateEmail = (inputValue: string, filed: string): string => {
   ];
   inputValue = inputValue.trim();
   const errors =
-    isRequired(inputValue, filed) ||
-    isString(inputValue, filed) ||
-    isNotEmpty(inputValue, filed) ||
+    isRequired(inputValue, filed) ??
+    isString(inputValue, filed) ??
+    isNotEmpty(inputValue, filed) ??
     hasValidateRequirements(inputValue, filed, regexArgEmail);
-  return errors || inputValue.toLowerCase();
+  return errors ?? inputValue.toLowerCase();
 };
 
 // validate password
@@ -243,18 +243,18 @@ const validatePassword = (password: string): string => {
     },
   ];
   const errors =
-    isRequired(password, "password") ||
-    isString(password, "password") ||
-    isNotEmpty(password, "password") ||
+    isRequired(password, "password") ??
+    isString(password, "password") ??
+    isNotEmpty(password, "password") ??
     hasValidateRequirements(password, "password", regexArgPassword);
-  return errors || password;
+  return errors ?? password;
 };
 
 // Validate birthdate.
-export const validateBirthdate = (
+const validateBirthdate = (
   inputValue: any,
   field: string
-): string | any => {
+) => {
   /*
   Campo obligatorio.
     Tipo Calendario. from ok
@@ -265,21 +265,21 @@ export const validateBirthdate = (
   */
   const regexArgDate = [
     {
-      reg: /^\d{4}[-\/]\d{2}[-\/]\d{2}( \d{2}:\d{2}:\d{2})?$/,
+      reg: /^\d{4}[-/]\d{2}[-/]\d{2}( \d{2}:\d{2}:\d{2})?$/,
       msn: "no es una fecha.",
     },
   ];
   const errors =
-    isRequired(inputValue, field) ||
-    isNotEmpty(inputValue, field) ||
-    isDate(inputValue, field) ||
-    isValidateAge(inputValue, field) ||
+    isRequired(inputValue, field) ??
+    isNotEmpty(inputValue, field) ??
+    isDate(inputValue, field) ??
+    isValidateAge(inputValue, field) ??
     hasValidateRequirements(inputValue, field, regexArgDate);
-  return errors || inputValue;
+  return errors ?? inputValue;
 };
 
 // Validate phone.
-export const validatePhone = (inputValue: string, field: string): string => {
+const validatePhone = (inputValue: string, field: string): string => {
   /*
   Validación de Teléfono:
     Campo no obligatorio. ok
@@ -294,20 +294,20 @@ export const validatePhone = (inputValue: string, field: string): string => {
       msn: "debe tener entre 8 y 16 caracteres.",
     },
     {
-      reg: /^[0-9 +\-]*$/,
+      reg: /^[0-9 +-]*$/,
       msn: "solo puede contener caracteres numéricos, espacios y los caracteres especiales + -..",
     },
   ];
   const errors =
-    isRequired(inputValue, field) ||
-    isNotEmpty(inputValue, field) ||
-    isString(inputValue, field) ||
+    isRequired(inputValue, field) ??
+    isNotEmpty(inputValue, field) ??
+    isString(inputValue, field) ??
     hasValidateRequirements(inputValue, field, regexArgPhone);
-  return errors || inputValue;
+  return errors ?? inputValue;
 };
 
 //validate role.
-export const validateRole = (
+const validateRole = (
   inputValue: number,
   filed: string
 ): number | string => {
@@ -320,18 +320,48 @@ export const validateRole = (
   */
   const regexArgRole = [
     {
-      reg: /^[0-9]+$/,
+      reg: /^\d+$/,
       msn: "Debe ser un valor numérico.",
     },
   ];
   const errors =
-    isRequired(inputValue, filed) ||
-    isNumber(inputValue, filed) ||
-    isNotEmpty(inputValue, filed) ||
+    isRequired(inputValue, filed) ??
+    isNumber(inputValue, filed) ??
+    isNotEmpty(inputValue, filed) ??
     hasValidateRequirements(inputValue, "role", regexArgRole);
-  return errors || inputValue;
+  return errors ?? inputValue;
+};
+// Validate body fields
+export const validateFields = (body: any) => {
+  const bodyKey = Object.keys(body);
+  if (bodyKey.length === 0) {
+    return { message: "No hay campos en el body." };
+  }
+  // Validar campos contra modelos
+  for (const key of bodyKey) {
+    if (!userKeys.includes(key)) {
+      return {
+        message: `El campo ${key} no está definido en el modelo usuario.`,
+      };
+    }
+  }
+  return true;
 };
 
+// Validate field requerid.
+export const validateRequeridFields = (body: any) => {
+  const requiredFields = userKeys.filter(
+    (key) => User.getAttributes()[key].allowNull === false
+  );
+  for (const field of requiredFields) {
+    if (!body[field]) {
+      return { message: `El campo ${field} es requerido.` };
+    }
+  }
+  return true;
+};
+
+// Validate Custom Fields requerid.
 export const validateRequeridFieldsCustom = (body: any) => {
   const requiredFields = ["email", "password"];
   const extraFields = Object.keys(body).filter(
@@ -367,37 +397,6 @@ export const validateRequeridFieldsCustom = (body: any) => {
   }
   return true;
 };
-
-// Validate body fields
-export const validateFields = (body: any) => {
-  const bodyKey = Object.keys(body);
-  if (bodyKey.length === 0) {
-    return { message: "No hay campos en el body." };
-  }
-  // Validar campos contra modelos
-  for (const key of bodyKey) {
-    if (!userKeys.includes(key)) {
-      return {
-        message: `El campo ${key} no está definido en el modelo usuario.`,
-      };
-    }
-  }
-  return true;
-};
-
-// Validate field requerid.
-export const validateRequeridFields = (body: any) => {
-  const requiredFields = userKeys.filter(
-    (key) => User.getAttributes()[key].allowNull === false
-  );
-  for (const field of requiredFields) {
-    if (!body[field]) {
-      return { message: `El campo ${field} es requerido.` };
-    }
-  }
-  return true;
-};
-
 
 // Validate Field body
 export const validateFieldBody = (body: any) => {

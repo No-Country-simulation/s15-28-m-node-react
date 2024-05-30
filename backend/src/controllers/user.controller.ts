@@ -5,7 +5,7 @@ import {
   validateFieldBody,
   validateFields,
   validateRequeridFields,
-} from "../utils/validation";
+} from "../utils/validationUser";
 
 interface UserQueryParams {
   role_id?: string;
@@ -26,8 +26,7 @@ export async function createUser(req: Request, res: Response) {
     const validate: boolean = bodyValidateKeys.every(
       (key: string) => bodyValidate[key] === body[key]
     );
-    if (!validate)
-      return res.status(400).json({ message: bodyValidate });
+    if (!validate) return res.status(400).json({ message: bodyValidate });
     const validateEmail = await User.findOne({ where: { email: body.email } });
     if (validateEmail !== null) {
       return res
@@ -118,12 +117,12 @@ export async function updateUser(req: Request, res: Response) {
     const body = req.body;
     const validateField = validateFields(body);
     if (validateField !== true) return res.status(400).json(validateField);
-      const bodyValidate = validateFieldBody(body);
-      const bodyValidateKeys = Object.keys(bodyValidate);
-      const validate: boolean = bodyValidateKeys.every(
-        (key: string) => bodyValidate[key] === body[key]
-      );
-      if (!validate) return res.status(400).json({ message: bodyValidate });
+    const bodyValidate = validateFieldBody(body);
+    const bodyValidateKeys = Object.keys(bodyValidate);
+    const validate: boolean = bodyValidateKeys.every(
+      (key: string) => bodyValidate[key] === body[key]
+    );
+    if (!validate) return res.status(400).json({ message: bodyValidate });
     const [updated] = await User.update(body, {
       where: { uuid: id },
     });

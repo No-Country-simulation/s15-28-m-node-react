@@ -8,7 +8,7 @@ import {
   validateFieldBody,
   validateFields,
   validateRequeridFieldsCustom,
-} from "../utils/validation";
+} from "../utils/validationUser";
 
 export async function login(req: Request, res: Response) {
   try {
