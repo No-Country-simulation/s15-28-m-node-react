@@ -54,7 +54,7 @@ export function optionalFieldBody({
     return [
       422,
       {
-        message: `Los siguientes campos no son validos: 
+        message: `Los siguientes campos no son validos:
         ${invalidFields.join(', ')}`,
       },
     ]
