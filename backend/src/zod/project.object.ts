@@ -98,8 +98,8 @@ export const project = z.object({
     .string()
     .min(6, { message: 'El minimo de caracteres es 6' })
     .max(255, { message: 'El maximo de caracteres es 255' })
-    .regex(/[^\s]/, { message: 'No debe haber espacios' })
     .email({
       message: 'El correo debe ser una dirección de correo electrónico.',
-    }),
+    })
+    .refine((val) => !/\s/.test(val), { message: 'No debe haber espacios' }),
 })
