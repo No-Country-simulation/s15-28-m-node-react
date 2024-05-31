@@ -24,6 +24,8 @@ tags:
     description: Operations about authentication
   - name: Team
     description: Operations about team
+  - name: Utils
+    description: Operations about utils
 
 components:
   securitySchemes:
@@ -103,6 +105,33 @@ components:
         description:
           type: string
           example: Team 1 description
+    Role:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: freelance
+    Status:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: active
+    Label:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: label 1
 
   parameters:
     UUID:
@@ -467,3 +496,52 @@ paths:
                       example: Team not found
           '500':
             $ref: '#/components/responses/500'
+
+  /roles:
+    get:
+      summary: Get all roles
+      tags:
+        - Utils
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Roles retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '500':
+          $ref: '#/components/responses/500'
+  /status:
+    get:
+      summary: Get all status
+      tags:
+        - Utils
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '500':
+          $ref: '#/components/responses/500'
+  /labels:
+    get:
+      summary: Get all labels
+      tags:
+        - Utils
+      security:
+        - ApiKeyAuth: []
+      responses:
+        '200':
+          description: Labels retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Label'
+        '500':
+          $ref: '#/components/responses/500'
