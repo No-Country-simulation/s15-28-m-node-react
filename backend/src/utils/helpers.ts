@@ -9,7 +9,7 @@ interface Props {
 }
 
 type RequeriedFieldsBodyResponse = [number, { message: string }]
-
+type ErrorTypeResponse = [number, { message: string; error: any }]
 export function requeriedFieldsBody({
   body,
   model,
@@ -64,7 +64,7 @@ export function optionalFieldBody({
 }
 
 type ErrorType = ZodError | Error | unknown
-export function messageError(error: ErrorType) {
+export function messageError(error: ErrorType): ErrorTypeResponse {
   if (error instanceof ZodError) {
     return [
       500,
