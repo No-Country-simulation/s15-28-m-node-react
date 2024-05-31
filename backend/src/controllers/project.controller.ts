@@ -1,6 +1,11 @@
 import { Request, Response } from 'express'
 import { Project } from '../models/project.model'
-import { optionalFieldBody, requeriedFieldsBody } from '../utils/helpers'
+import {
+  messageError,
+  optionalFieldBody,
+  requeriedFieldsBody,
+} from '../utils/helpers'
+import { project } from '../zod/project.object'
 
 export async function createProject(req: Request, res: Response) {
   try {
@@ -23,14 +28,18 @@ export async function createProject(req: Request, res: Response) {
     })
     // Comprobar que el req.userId esta funcionando correctamente
     if (error !== 200) return res.status(error).json(message)
+
+    const partialProject = project.partial()
+    partialProject.parse(body)
+
     body.status_uuid = 'cb01e587-9501-4370-9fd0-d2ab7b3e07d3' // Creado en BD
     body.user_uuid = req.userId // id del usuario por token
     body.uuid = crypto.randomUUID()
-    const project = await Project.create(body)
-    return res.status(201).json(project)
-  } catch (error) {
-    console.error('Error creating project:', error)
-    return res.status(500).json({ message: 'Internal server error' })
+    const newProject = await Project.create(body)
+    return res.status(201).json(newProject)
+  } catch (err) {
+    const [error, message] = messageError(err)
+    return res.status(error).json(message)
   }
 }
 
